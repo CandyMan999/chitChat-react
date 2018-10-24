@@ -9,6 +9,7 @@ const Navbar = ({ username, navInput, password, navSubmit }) => (
     <div className="sign-up">Create A UserName and Password</div>
     <form>
       <input
+        style={{ margin: "2px" }}
         type="text"
         placeholder="Username"
         name="username"

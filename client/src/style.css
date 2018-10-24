@@ -19,14 +19,28 @@ body {
 #root {
   height: 100%;
 }
-
 .app {
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 40px 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    "b b b b b b"
+    "c c c c p p"
+    "c c c c p p"
+    "c c c c p p"
+    "v v v g g g"
+    "v v v g g g"
+    "v v v g g g";
+}
+.wrapper {
+  grid-area: c;
   display: grid;
   height: 100%;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 60px;
   grid-template-areas:
-    "b b b b b b"
+    "m m m m m r"
     "m m m m m r"
     "m m m m m r"
     "m m m m m r"
@@ -79,7 +93,6 @@ body {
   grid-area: m;
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 73vh;
 }
 .send-message-form {
   grid-area: f;
@@ -93,7 +106,6 @@ body {
 }
 
 .new-room-form {
-  padding: 0 5px;
   background: var(--secondary-color);
   color: var(--main-text-color);
   height: 100%;
@@ -114,7 +126,9 @@ body {
 }
 
 #create-room-btn {
-  height: 63px;
+  color: mediumaquamarine;
+  background: gainsboro;
+  height: 60px;
 }
 
 .join-a-room {

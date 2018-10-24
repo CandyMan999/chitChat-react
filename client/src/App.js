@@ -6,6 +6,7 @@ import SendMessageForm from "./components/send-message";
 import NewRoomForm from "./components/new-room-form";
 import "./style.css";
 import Navbar from "./components/navbar";
+import Wrapper from "./components/wrapper";
 
 import { tokenURL, instanceLocator } from "./config";
 
@@ -19,24 +20,6 @@ class App extends Component {
     password: "",
     currentUser: ""
   };
-
-  // createNewUser = () => {
-  //   const chatkit = new Chatkit.default({
-  //     instanceLocator: instanceLocator,
-  //     key: key
-  //   });
-  //   chatkit
-  //     .createUser({
-  //       id: this.state.currentUser,
-  //       name: this.state.currentUser
-  //     })
-  //     .then(res => {
-  //       console.log("User created successfully", res);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };  I have to do this from a server.. I do not have a server yet
 
   componentDidMount = () => {
     const chatManager = new ChatManager({
@@ -132,9 +115,24 @@ class App extends Component {
       password: "",
       currentUser: this.state.username
     });
-
-    // this.createNewUser();
   };
+
+  onUsernameSubmitted(username) {
+    fetch("http://localhost:3001/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username })
+    })
+      .then(response => {
+        console.log("response after submitting a new user: ", response);
+        this.setState({
+          currentUsername: username
+        });
+      })
+      .catch(error => console.error("error", error));
+  }
 
   render() {
     //console.log(...this.state.joinableRooms, this.state.joinedRooms);
@@ -146,20 +144,22 @@ class App extends Component {
           username={this.state.username}
           password={this.state.password}
         />
-        <RoomList
-          roomId={this.state.roomId}
-          subscribeToRoom={this.subscribeToRoom}
-          rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
-        />
-        <MessageList
-          roomId={this.state.roomId}
-          messages={this.state.messages}
-        />
-        <NewRoomForm createRoom={this.createRoom} />
-        <SendMessageForm
-          disabled={!this.state.roomId}
-          sendMessage={this.sendMessage}
-        />
+        <Wrapper>
+          <RoomList
+            roomId={this.state.roomId}
+            subscribeToRoom={this.subscribeToRoom}
+            rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
+          />
+          <MessageList
+            roomId={this.state.roomId}
+            messages={this.state.messages}
+          />
+          <NewRoomForm createRoom={this.createRoom} />
+          <SendMessageForm
+            disabled={!this.state.roomId}
+            sendMessage={this.sendMessage}
+          />
+        </Wrapper>
       </div>
     );
   }
