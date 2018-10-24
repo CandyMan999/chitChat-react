@@ -110,7 +110,7 @@ body {
   height: 60px;
   width: 100%;
   font-size: 20px;
-  border: 1px solid lightsalmon;
+  border: 1px solid mediumaquamarine;
 }
 
 #create-room-btn {
@@ -141,6 +141,6 @@ body {
   margin-left: 2px;
 }
 
-.login {
+.sign-up {
   margin-right: 30px;
 }

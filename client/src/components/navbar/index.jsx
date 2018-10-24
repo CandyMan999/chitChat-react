@@ -6,7 +6,7 @@ const Navbar = ({ username, navInput, password, navSubmit }) => (
     className="navbar "
   >
     {" "}
-    <div className="login">Create A UserName and Password</div>
+    <div className="sign-up">Create A UserName and Password</div>
     <form>
       <input
         type="text"

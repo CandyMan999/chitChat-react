@@ -7,7 +7,6 @@ import NewRoomForm from "./components/new-room-form";
 import "./style.css";
 import Navbar from "./components/navbar";
 
-
 import { tokenURL, instanceLocator } from "./config";
 
 class App extends Component {
@@ -42,7 +41,7 @@ class App extends Component {
   componentDidMount = () => {
     const chatManager = new ChatManager({
       instanceLocator,
-      userId: "John", //TODO create users
+      userId: "Sam", //TODO create users
       tokenProvider: new TokenProvider({
         url: tokenURL
       })
