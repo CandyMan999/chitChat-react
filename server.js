@@ -25,6 +25,10 @@ if (process.env.NODE_ENV === "production") {
 // Add routes, both API and view
 //app.use(routes);
 
+app.get("*", (req, res) => {
+  res.send("hello");
+});
+
 app.post("/users", (req, res) => {
   const { username } = req.body;
   chatkit

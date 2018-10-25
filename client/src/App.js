@@ -7,6 +7,7 @@ import NewRoomForm from "./components/new-room-form";
 import "./style.css";
 import Navbar from "./components/navbar";
 import Wrapper from "./components/wrapper";
+import axios from "axios";
 
 import { tokenURL, instanceLocator } from "./config";
 
@@ -16,9 +17,7 @@ class App extends Component {
     messages: [],
     joinableRooms: [],
     joinedRooms: [],
-    username: "",
-    password: "",
-    currentUser: ""
+    username: null
   };
 
   componentDidMount = () => {
@@ -89,41 +88,32 @@ class App extends Component {
       .catch(err => console.log("error with create room: ", err));
   };
 
-  navbarInputChange = event => {
-    // Pull the name and value properties off of the event.target (the element which triggered the event)
-    const { name, value } = event.target;
-
-    // Set the state for the appropriate input field
-    this.setState({
-      [name]: value
-    });
-  };
-
   // When the form is submitted, prevent the default event and alert the username and password
-  navbarFormSubmit = event => {
-    event.preventDefault();
-    if (!this.state.username) {
-      alert("Fill out your username please!");
-    } else if (this.state.password.length < 6) {
-      alert(`Choose a more secure password ${this.state.username}`);
-    } else {
-      alert(`Hello ${this.state.username}`);
-    }
+  // navbarFormSubmit = event => {
+  //   event.preventDefault();
+  //   if (!this.state.username) {
+  //     alert("Fill out your username please!");
+  //   } else if (this.state.password.length < 6) {
+  //     alert(`Choose a more secure password ${this.state.username}`);
+  //   } else {
+  //     alert(`Hello ${this.state.username}`);
+  //   }
 
-    this.setState({
-      username: "",
-      password: "",
-      currentUser: this.state.username
-    });
-  };
+  //   this.setState({
+  //     username: "",
+  //     password: "",
+  //     currentUser: this.state.username
+  //   });
+  // };
 
-  onUsernameSubmitted(username) {
-    fetch("http://localhost:3001/users", {
+  signUp({ username, password }) {
+    axios({
+      url: "/users",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ username })
+      data: JSON.stringify({ username, password })
     })
       .then(response => {
         console.log("response after submitting a new user: ", response);
@@ -138,12 +128,8 @@ class App extends Component {
     //console.log(...this.state.joinableRooms, this.state.joinedRooms);
     return (
       <div className="app">
-        <Navbar
-          navInput={this.navbarInputChange}
-          navSubmit={this.navbarFormSubmit}
-          username={this.state.username}
-          password={this.state.password}
-        />
+        <Navbar onSignup={this.signUp} />
+        {this.state.username}
         <Wrapper>
           <RoomList
             roomId={this.state.roomId}
