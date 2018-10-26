@@ -21,11 +21,14 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "bcrypt": "^3.0.2",
     "body-parser": "^1.17.2",
     "cors": "^2.8.4",
     "express": "^4.15.4",
+    "fs": "0.0.1-security",
     "if-env": "^1.0.4",
     "mongoose": "^5.0.17",
+    "multer": "^1.4.1",
     "pusher-chatkit-server": "^0.12.0"
   }
 }

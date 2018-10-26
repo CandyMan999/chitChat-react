@@ -1,49 +1,40 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-//const routes = require("./routes");
 const cors = require("cors");
-const Chatkit = require("pusher-chatkit-server");
+const fs = require("fs");
+const multer = require("multer");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
-const chatkit = new Chatkit.default({
-  instanceLocator: "v1:us1:a55d6d92-ceb4-4e02-a75e-b47722122dcb",
-  key:
-    "1e28b3ff-92aa-4df1-a5db-2a113523ad2f:erUgKYEhx/4tA5mf8KZxL6ey+f7Qu/lKPael4YBx5Ts="
-});
 
 // Define middleware here
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+
+// app.use(
+//   multer({
+//     dest: "./uploads/",
+//     rename: function(fieldname, filename) {
+//       return filename;
+//     }
+//   })
+// );
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 // Add routes, both API and view
 //app.use(routes);
+//this is middleware for handling photo uploads
 
-app.get("*", (req, res) => {
-  res.send("hello");
-});
-
-app.post("/users", (req, res) => {
-  const { username } = req.body;
-  chatkit
-    .createUser({
-      id: username,
-      name: username
-    })
-    .then(() => res.sendStatus(201))
-    .catch(error => {
-      if (error.error_type === "services/chatkit/user_already_exists") {
-        res.sendStatus(200);
-      } else {
-        res.status(error.status).json(error);
-      }
-    });
+// post route for our photo
+app.post("/api/photo", function(req, res) {
+  const newItem = new Picture();
+  newItem.img.data = fs.readFileSync(req.files.userPhoto.path);
+  newItem.img.contentType = "image/png";
+  newItem.save();
 });
 
 app.post("/authenticate", (req, res) => {
@@ -53,6 +44,10 @@ app.post("/authenticate", (req, res) => {
 
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/chitchat");
+
+//api routes
+const apiRoutes = require("./routes/apiRoutes.js");
+app.use(apiRoutes);
 
 // Start the API server
 app.listen(PORT, function() {

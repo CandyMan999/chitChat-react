@@ -50,7 +50,7 @@ body {
 .navbar {
   grid-area: b;
   display: flex;
-  justify-content: center;
+
   background: #6d7d78;
 }
 .new-room-form {
@@ -67,7 +67,6 @@ body {
 .rooms-list ul {
   list-style-type: none;
   padding: 0;
-  overflow: scroll;
 }
 .rooms-list li {
   margin: 10px 0;
@@ -137,11 +136,11 @@ body {
   font-size: 70px;
 }
 .message-text {
-  margin-left: 5%;
   padding: 1%;
   background-color: var(--main-color);
   width: fit-content;
   color: white;
+  display: -webkit-inline-box;
 }
 .message-username {
   font-size: 20px;
@@ -149,6 +148,7 @@ body {
   padding: 1%;
   color: mediumaquamarine;
   font-weight: 500;
+  display: -webkit-inline-box;
 }
 
 #submit {

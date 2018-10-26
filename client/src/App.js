@@ -8,6 +8,7 @@ import "./style.css";
 import Navbar from "./components/navbar";
 import Wrapper from "./components/wrapper";
 import axios from "axios";
+import Api from "../src/utils/API";
 
 import { tokenURL, instanceLocator } from "./config";
 
@@ -20,22 +21,24 @@ class App extends Component {
     username: null
   };
 
-  componentDidMount = () => {
-    const chatManager = new ChatManager({
-      instanceLocator,
-      userId: "Sam", //TODO create users
-      tokenProvider: new TokenProvider({
-        url: tokenURL
-      })
-    });
+  componentDidUpdate = () => {
+    if (this.state.username !== null) {
+      const chatManager = new ChatManager({
+        instanceLocator,
+        userId: this.state.username,
+        tokenProvider: new TokenProvider({
+          url: tokenURL
+        })
+      });
 
-    chatManager
-      .connect()
-      .then(currentUser => {
-        this.currentUser = currentUser;
-        this.getRooms();
-      })
-      .catch(err => console.log("error on connecting: ", err));
+      chatManager
+        .connect()
+        .then(currentUser => {
+          this.currentUser = currentUser;
+          this.getRooms();
+        })
+        .catch(err => console.log("error on connecting: ", err));
+    }
   };
 
   getRooms = () => {
@@ -106,46 +109,59 @@ class App extends Component {
   //   });
   // };
 
-  signUp({ username, password }) {
+  login = ({ username, password }) => {
     axios({
       url: "/users",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      data: JSON.stringify({ username, password })
+      data: { username, password }
     })
       .then(response => {
-        console.log("response after submitting a new user: ", response);
+        console.log(
+          "response after submitting a new user: ",
+          response.config.data
+        );
+        const newUser = JSON.parse(response.config.data);
+
         this.setState({
-          currentUsername: username
+          username: newUser.username
         });
       })
       .catch(error => console.error("error", error));
-  }
+  };
+
+  signUp = (email, password) => {
+    Api.creatUser(email, password);
+  };
 
   render() {
     //console.log(...this.state.joinableRooms, this.state.joinedRooms);
     return (
       <div className="app">
-        <Navbar onSignup={this.signUp} />
-        {this.state.username}
-        <Wrapper>
-          <RoomList
-            roomId={this.state.roomId}
-            subscribeToRoom={this.subscribeToRoom}
-            rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
-          />
-          <MessageList
-            roomId={this.state.roomId}
-            messages={this.state.messages}
-          />
-          <NewRoomForm createRoom={this.createRoom} />
-          <SendMessageForm
-            disabled={!this.state.roomId}
-            sendMessage={this.sendMessage}
-          />
-        </Wrapper>
+        <Navbar onLogin={this.login} onSignUp={this.signUp} />
+
+        {!this.state.username ? (
+          ""
+        ) : (
+          <Wrapper>
+            <RoomList
+              roomId={this.state.roomId}
+              subscribeToRoom={this.subscribeToRoom}
+              rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
+            />
+            <MessageList
+              roomId={this.state.roomId}
+              messages={this.state.messages}
+            />
+            <NewRoomForm createRoom={this.createRoom} />
+            <SendMessageForm
+              disabled={!this.state.roomId}
+              sendMessage={this.sendMessage}
+            />
+          </Wrapper>
+        )}
       </div>
     );
   }
