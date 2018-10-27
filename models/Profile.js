@@ -36,7 +36,7 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     enum: ["yes", "socially", "never"]
   },
-  "420": {
+  marijuana: {
     type: String,
     enum: ["friendly", "unfriendly"]
   },

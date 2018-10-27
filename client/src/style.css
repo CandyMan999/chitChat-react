@@ -29,9 +29,9 @@ body {
     "c c c c p p"
     "c c c c p p"
     "c c c c p p"
-    "v v v g g g"
-    "v v v g g g"
-    "v v v g g g";
+    "v v v g p p"
+    "v v v g p p"
+    "v v v g p p";
 }
 .wrapper {
   grid-area: c;
@@ -157,4 +157,13 @@ body {
 
 .sign-up {
   margin-right: 30px;
+}
+
+.profile {
+  background: aqua;
+  grid-area: p;
+}
+
+.imageSection {
+  height: 50px;
 }

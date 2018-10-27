@@ -4,6 +4,7 @@ import RoomList from "./components/room-list";
 import MessageList from "./components/message-list";
 import SendMessageForm from "./components/send-message";
 import NewRoomForm from "./components/new-room-form";
+import Profile from "./components/profile";
 import "./style.css";
 import Navbar from "./components/navbar";
 import Wrapper from "./components/wrapper";
@@ -18,7 +19,11 @@ class App extends Component {
     messages: [],
     joinableRooms: [],
     joinedRooms: [],
-    username: null
+    username: null,
+    login: false,
+    signup: false,
+    signupSubmitted: false,
+    userId: null
   };
 
   componentDidUpdate = () => {
@@ -91,24 +96,6 @@ class App extends Component {
       .catch(err => console.log("error with create room: ", err));
   };
 
-  // When the form is submitted, prevent the default event and alert the username and password
-  // navbarFormSubmit = event => {
-  //   event.preventDefault();
-  //   if (!this.state.username) {
-  //     alert("Fill out your username please!");
-  //   } else if (this.state.password.length < 6) {
-  //     alert(`Choose a more secure password ${this.state.username}`);
-  //   } else {
-  //     alert(`Hello ${this.state.username}`);
-  //   }
-
-  //   this.setState({
-  //     username: "",
-  //     password: "",
-  //     currentUser: this.state.username
-  //   });
-  // };
-
   login = ({ username, password }) => {
     axios({
       url: "/users",
@@ -133,14 +120,35 @@ class App extends Component {
   };
 
   signUp = (email, password) => {
-    Api.creatUser(email, password);
+    Api.creatUser(email, password).then(res => {
+      Api.getUser(res._id).then(response => {
+        console.log("response of getting user: ", response);
+        this.setState({ userId: response._id });
+      });
+    });
+    this.setState({ signupSubmitted: !this.state.signupSubmitted });
+  };
+
+  loginClick = () => {
+    this.setState({ login: !this.state.login, signup: false });
+  };
+
+  signupClick = () => {
+    this.setState({ signup: !this.state.signup, login: false });
   };
 
   render() {
     //console.log(...this.state.joinableRooms, this.state.joinedRooms);
     return (
       <div className="app">
-        <Navbar onLogin={this.login} onSignUp={this.signUp} />
+        <Navbar
+          onLogin={this.login}
+          onSignUp={this.signUp}
+          loginClick={this.loginClick}
+          signupClick={this.signupClick}
+          login={this.state.login}
+          signup={this.state.signup}
+        />
 
         {!this.state.username ? (
           ""
@@ -162,6 +170,10 @@ class App extends Component {
             />
           </Wrapper>
         )}
+        <Profile
+          userId={this.state.userId}
+          signupSubmitted={this.state.signupSubmitted}
+        />
       </div>
     );
   }

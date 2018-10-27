@@ -10,13 +10,30 @@ const chatkit = new Chatkit.default({
     "1e28b3ff-92aa-4df1-a5db-2a113523ad2f:erUgKYEhx/4tA5mf8KZxL6ey+f7Qu/lKPael4YBx5Ts="
 });
 
-router.get("/api/test", function(res, res) {
-  res.json({ hello: "world" });
+router.get("/api/users/:id", (req, res) => {
+  db.User.findOne({
+    _id: req.params.id
+  })
+    .then(response => res.json(response))
+    .catch(err => console.log("had error getting user: ", err));
 });
+
 router.post("/api/users", (req, res) => {
   console.log("seeing if this hits");
   db.User.create(req.body)
     .then(response => res.json(response))
+    .catch(err => console.log(err));
+});
+
+router.post("/login", (req, res) => {
+  db.User.findOne({
+    email: req.body.email
+  })
+    .populate("profile")
+    .then(function(dbProfile) {
+      res.json(dbProfile);
+      console.log(dbProfile);
+    })
     .catch(err => console.log(err));
 });
 
@@ -35,6 +52,27 @@ router.post("/users", (req, res) => {
         res.status(error.status).json(error);
       }
     });
+});
+
+router.post("/api/users/:id", (req, res) => {
+  console.log("did this fire");
+  db.Profile.create(req.body).then(function(dbProfile) {
+    return db.User.findOneAndUpdate(
+      {
+        _id: req.params.id
+      },
+      { $push: { profile: dbProfile._id } },
+      {
+        new: true
+      }
+    )
+      .then(function(dbProfile) {
+        res.json(dbProfile);
+      })
+      .catch(function(err) {
+        res.json(err);
+      });
+  });
 });
 
 module.exports = router;
