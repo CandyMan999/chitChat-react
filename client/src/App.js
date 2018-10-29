@@ -12,6 +12,7 @@ import axios from "axios";
 import Api from "../src/utils/API";
 
 import { tokenURL, instanceLocator } from "./config";
+import { setToken, getToken } from "./utils/helpers";
 
 class App extends Component {
   state = {
@@ -20,10 +21,19 @@ class App extends Component {
     joinableRooms: [],
     joinedRooms: [],
     username: null,
-    login: false,
-    signup: false,
-    signupSubmitted: false,
     userId: null
+  };
+
+  componentDidMount = () => {
+    const token = getToken();
+    console.log("my token when the component mounted: ", token);
+    if (token) {
+      Api.getMe(token)
+        .then(({ data: { _id: userId, username } }) => {
+          this.setState({ userId, username });
+        })
+        .catch(err => console.log("something went wrong with token: ", err));
+    }
   };
 
   componentDidUpdate = () => {
@@ -96,9 +106,9 @@ class App extends Component {
       .catch(err => console.log("error with create room: ", err));
   };
 
-  login = ({ username, password }) => {
+  login = ({ username, password, shouldPersist }) => {
     axios({
-      url: "/users",
+      url: "/login",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -110,45 +120,30 @@ class App extends Component {
           "response after submitting a new user: ",
           response.config.data
         );
-        const newUser = JSON.parse(response.config.data);
-
+        const newUser = response.data.user;
+        console.log(response, newUser);
+        console.log("!!!!", shouldPersist);
+        setToken(response.data.token, shouldPersist);
         this.setState({
-          username: newUser.username
+          username: newUser.username,
+          userId: newUser._id
         });
       })
       .catch(error => console.error("error", error));
   };
 
-  signUp = (email, password) => {
-    Api.creatUser(email, password).then(res => {
-      Api.getUser(res._id).then(response => {
-        console.log("response of getting user: ", response);
-        this.setState({ userId: response._id });
-      });
+  signUp = data => {
+    Api.creatUser(data).then(res => {
+      console.log(res);
+      this.setState({ userId: res.data._id, username: res.data.username });
     });
-    this.setState({ signupSubmitted: !this.state.signupSubmitted });
-  };
-
-  loginClick = () => {
-    this.setState({ login: !this.state.login, signup: false });
-  };
-
-  signupClick = () => {
-    this.setState({ signup: !this.state.signup, login: false });
   };
 
   render() {
     //console.log(...this.state.joinableRooms, this.state.joinedRooms);
     return (
       <div className="app">
-        <Navbar
-          onLogin={this.login}
-          onSignUp={this.signUp}
-          loginClick={this.loginClick}
-          signupClick={this.signupClick}
-          login={this.state.login}
-          signup={this.state.signup}
-        />
+        <Navbar onLogin={this.login} onSignUp={this.signUp} />
 
         {!this.state.username ? (
           ""
@@ -172,7 +167,7 @@ class App extends Component {
         )}
         <Profile
           userId={this.state.userId}
-          signupSubmitted={this.state.signupSubmitted}
+          signupSubmitted={!!this.state.username}
         />
       </div>
     );

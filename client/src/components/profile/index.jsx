@@ -23,9 +23,8 @@ class Profile extends Component {
     e.preventDefault();
     const id = this.props.userId;
     axios
-      .post(`/api/users/${id}`, {
+      .put(`/api/users/${id}`, {
         intro: this.state.intro,
-        username: this.state.username,
         age: this.state.age,
         sex: this.state.sex,
         occupation: this.state.occupation,
@@ -56,14 +55,7 @@ class Profile extends Component {
                 value={this.state.intro}
                 onChange={e => this.handleChange(e, "intro")}
               />
-              <input
-                type="text"
-                placeholder="Username"
-                name="username"
-                value={this.state.username}
-                onChange={e => this.handleChange(e, "username")}
-              />
-              <section ClassName="imageSection">
+              <section className="imageSection">
                 <div className="dropzone">
                   <Dropzone
                     accept="image/jpeg, image/png"
