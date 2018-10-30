@@ -13,21 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// app.use(
-//   multer({
-//     dest: "./uploads/",
-//     rename: function(fieldname, filename) {
-//       return filename;
-//     }
-//   })
-// );
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
-// Add routes, both API and view
-//app.use(routes);
-//this is middleware for handling photo uploads
 
 // post route for our photo
 app.post("/api/photo", function(req, res) {

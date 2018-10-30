@@ -21,7 +21,8 @@ class App extends Component {
     joinableRooms: [],
     joinedRooms: [],
     username: null,
-    userId: null
+    userId: null,
+    usersInRooms: null
   };
 
   componentDidMount = () => {
@@ -36,8 +37,11 @@ class App extends Component {
     }
   };
 
-  componentDidUpdate = () => {
-    if (this.state.username !== null) {
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      this.state.username !== null &&
+      this.state.username !== prevState.username
+    ) {
       const chatManager = new ChatManager({
         instanceLocator,
         userId: this.state.username,
@@ -50,6 +54,13 @@ class App extends Component {
         .connect()
         .then(currentUser => {
           this.currentUser = currentUser;
+
+          const rooms = this.currentUser.rooms;
+          // console.log(rooms);
+          this.setState({ usersInRooms: rooms });
+          // rooms.forEach((room, i) => {
+          //   console.log(`for room ${i} i have: ${room.userIds.length} users`);
+          // });
           this.getRooms();
         })
         .catch(err => console.log("error on connecting: ", err));
@@ -107,6 +118,7 @@ class App extends Component {
   };
 
   login = ({ username, password, shouldPersist }) => {
+    console.log("!!!!", shouldPersist);
     axios({
       url: "/login",
       method: "POST",
@@ -122,7 +134,7 @@ class App extends Component {
         );
         const newUser = response.data.user;
         console.log(response, newUser);
-        console.log("!!!!", shouldPersist);
+
         setToken(response.data.token, shouldPersist);
         this.setState({
           username: newUser.username,
@@ -132,10 +144,28 @@ class App extends Component {
       .catch(error => console.error("error", error));
   };
 
-  signUp = data => {
-    Api.creatUser(data).then(res => {
-      console.log(res);
-      this.setState({ userId: res.data._id, username: res.data.username });
+  signUp = ({ username, password, email, shouldPersist }) => {
+    console.log("should persist: ", shouldPersist);
+    axios({
+      url: "/api/users",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data: { username, password, email }
+    }).then(response => {
+      console.log("response after signing up: ", response.config.data);
+      console.log("data.user: ", response.data.userRes);
+      const newUser = response.data.userRes;
+      console.log(response, newUser);
+
+      setToken(response.data.token, shouldPersist);
+      this.setState({ userId: newUser._id, username: newUser.username });
+      //Api.creatUser(response.config.data);
+      // .then(res => {
+      //   console.log("user has been created: ", res);
+      //   this.setState({ userId: res.data._id, username: res.data.username });
+      // });
     });
   };
 
@@ -150,6 +180,7 @@ class App extends Component {
         ) : (
           <Wrapper>
             <RoomList
+              usersInRooms={this.state.usersInRooms}
               roomId={this.state.roomId}
               subscribeToRoom={this.subscribeToRoom}
               rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}

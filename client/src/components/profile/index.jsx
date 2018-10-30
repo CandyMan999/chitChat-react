@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from "react";
 import Dropzone from "react-dropzone";
 import axios from "axios";
+import Api from "../../utils/API";
+import omit from "lodash/omit";
 
 class Profile extends Component {
   state = {
     intro: "",
-    username: "",
     age: null,
     sex: "",
     occupation: "",
@@ -22,20 +23,7 @@ class Profile extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const id = this.props.userId;
-    axios
-      .put(`/api/users/${id}`, {
-        intro: this.state.intro,
-        age: this.state.age,
-        sex: this.state.sex,
-        occupation: this.state.occupation,
-        drink: this.state.drink,
-        smoke: this.state.smoke,
-        marijuana: this.state.marijuana,
-        kids: this.state.kids
-      })
-      .then(res => {
-        console.log(res);
-      });
+    Api.updateUser(id, omit(this.state, ["accepted", "rejected"]));
   };
 
   render() {
@@ -98,7 +86,7 @@ class Profile extends Component {
                 type="number"
                 placeholder="Age"
                 name="age"
-                value={this.state.age}
+                value={this.state.age || ""}
                 onChange={e => this.handleChange(e, "age")}
               />
               <br />{" "}
@@ -111,7 +99,7 @@ class Profile extends Component {
               />{" "}
               <br />
               <select onChange={e => this.handleChange(e, "sex")} name="sex">
-                <option value="" disabled selected>
+                <option value="male" disabled selected>
                   Gender...?
                 </option>
                 <option value="male">Male</option>

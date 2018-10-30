@@ -12,7 +12,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: system-ui;
-  font-weight: 200;
+
   color: #3e5869;
 }
 
@@ -136,14 +136,15 @@ body {
   font-size: 70px;
 }
 .message-text {
-  padding: 1%;
+  padding: 2px;
   background-color: var(--main-color);
   width: fit-content;
   color: white;
   display: -webkit-inline-box;
+  font-size: 10px;
 }
 .message-username {
-  font-size: 20px;
+  font-size: 10px;
   margin-left: 5%;
   padding: 1%;
   color: mediumaquamarine;

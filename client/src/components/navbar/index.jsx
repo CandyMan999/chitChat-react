@@ -21,8 +21,8 @@ class Navbar extends Component {
 
   handleSignUp = e => {
     e.preventDefault();
-    const { username, email, password } = this.state;
-    this.props.onSignUp({ username, email, password });
+    const { username, email, password, shouldPersist } = this.state;
+    this.props.onSignUp({ username, email, password, shouldPersist });
   };
 
   render() {
@@ -69,7 +69,7 @@ class Navbar extends Component {
               onChange={e => this.handleChange(e, "shouldPersist")}
               type="checkbox"
               name="shouldPersist"
-              value={this.state.shouldPersist}
+              value={!this.state.shouldPersist}
             />
           </form>
         ) : (
@@ -103,6 +103,13 @@ class Navbar extends Component {
             <button onClick={this.handleSignUp} id="signSubmit">
               Submit
             </button>
+            Keep me signed in
+            <input
+              onChange={e => this.handleChange(e, "shouldPersist")}
+              type="checkbox"
+              name="shouldPersist"
+              value={!this.state.shouldPersist}
+            />
           </form>
         ) : (
           ""

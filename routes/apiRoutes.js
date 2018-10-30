@@ -12,6 +12,23 @@ const chatkit = new Chatkit.default({
     "1e28b3ff-92aa-4df1-a5db-2a113523ad2f:erUgKYEhx/4tA5mf8KZxL6ey+f7Qu/lKPael4YBx5Ts="
 });
 
+const tokenAuthenticate = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(" ")[1]; //TODO check for bearer keyword
+  console.log(`!!${token}!!`);
+  return jwt.verify(token, SECRET, (err, decoded) => {
+    console.log("before err check");
+    if (err || !decoded) return res.status(401).json(err);
+    console.log("got past first arg");
+    return db.User.findById(decoded.id)
+      .then(user => {
+        req.user = user;
+        next();
+      })
+      .catch(err => res.status(401).json(err));
+  });
+};
+
 router.get("/api/users/:id", (req, res) => {
   db.User.findOne({
     _id: req.params.id
@@ -24,12 +41,20 @@ router.post("/api/users", async (req, res) => {
   console.log("seeing if this hits");
   try {
     const userRes = await db.User.create(req.body);
+    console.log("this is my user: ", userRes);
+
+    const token = jwt.sign({ id: userRes._id }, SECRET, {
+      expiresIn: "14 days"
+    });
+    console.log("my token: ", token);
+    // res.json({ user, token });
+
     chatkit
       .createUser({
         id: userRes.username,
         name: userRes.username
       })
-      .then(() => res.status(201).json(userRes))
+      .then(() => res.status(201).json({ userRes, token }))
       .catch(error => {
         res.status(error.status).json(error);
       });
@@ -58,25 +83,30 @@ router.post("/login", (req, res) => {
     .catch(err => console.log(err));
 });
 
-router.post("/users", (req, res) => {
-  const { username } = req.body;
-  chatkit
-    .createUser({
-      id: username,
-      name: username
-    })
-    .then(() => res.sendStatus(201))
-    .catch(error => {
-      if (error.error_type === "services/chatkit/user_already_exists") {
-        res.sendStatus(200);
-      } else {
-        res.status(error.status).json(error);
-      }
-    });
-});
+// router.post("/users", (req, res) => {
+//   const { username } = req.body;
+//   chatkit
+//     .createUser({
+//       id: username,
+//       name: username
+//     })
+//     .then(() => res.sendStatus(201))
+//     .catch(error => {
+//       if (error.error_type === "services/chatkit/user_already_exists") {
+//         res.sendStatus(200);
+//       } else {
+//         res.status(error.status).json(error);
+//       }
+//     });
+// });
 
-router.put("/api/users/:id", (req, res) => {
+router.put("/api/users/:id", tokenAuthenticate, (req, res) => {
   console.log("did this fire");
+
+  console.log("!!!!!", typeof req.params.id, typeof req.user._id);
+  if (req.params.id !== req.user._id.toString()) {
+    return res.sendStatus(401);
+  }
   db.User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then(response => {
       res.json(response);
@@ -84,18 +114,12 @@ router.put("/api/users/:id", (req, res) => {
     .catch(err => console.log("we had an error on updating the user: ", err));
 });
 
-router.get("/api/me", (req, res) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader.split(" ")[1]; //TODO check for bearer keyword
-  console.log(`!!${token}!!`);
-  return jwt.verify(token, SECRET, (err, decoded) => {
-    console.log("before err check");
-    if (err || !decoded) return res.status(401).json(err);
-    console.log("got past first arg");
-    return db.User.findById(decoded.id)
-      .then(response => res.json(response))
-      .catch(err => res.status(401).json(err));
-  });
+router.get("/api/me", tokenAuthenticate, (req, res) => {
+  if (req.user) {
+    res.json(req.user);
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 module.exports = router;

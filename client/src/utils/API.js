@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "./helpers";
 
 export default {
   creatUser: data => axios.post("/api/users", data),
@@ -15,5 +16,16 @@ export default {
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }),
+
+  updateUser: (id, data) =>
+    console.log(id) ||
+    axios({
+      url: `/api/users/${id}`,
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      },
+      data
     })
 };
