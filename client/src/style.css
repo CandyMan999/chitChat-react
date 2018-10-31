@@ -150,6 +150,7 @@ body {
   color: mediumaquamarine;
   font-weight: 500;
   display: -webkit-inline-box;
+  cursor: pointer;
 }
 
 #submit {
@@ -163,4 +164,8 @@ body {
 .profile {
   background: aqua;
   grid-area: p;
+}
+
+#editProfile {
+  cursor: pointer;
 }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Message from "./message";
 import ReactDOM from "react-dom";
+import Api from "../../utils/API";
 
 class MessageList extends Component {
   componentWillUpdate() {
@@ -29,6 +30,7 @@ class MessageList extends Component {
         {this.props.messages.map((message, index) => {
           return (
             <Message
+              usernameClick={this.props.usernameClick}
               key={index}
               username={message.senderId}
               text={message.text}

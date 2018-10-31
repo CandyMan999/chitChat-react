@@ -22,7 +22,9 @@ class App extends Component {
     joinedRooms: [],
     username: null,
     userId: null,
-    usersInRooms: null
+    usersInRooms: null,
+    clickedUser: null,
+    editProfile: false
   };
 
   componentDidMount = () => {
@@ -55,9 +57,12 @@ class App extends Component {
         .then(currentUser => {
           this.currentUser = currentUser;
 
-          const rooms = this.currentUser.rooms;
+          //const rooms = this.currentUser.rooms;
           // console.log(rooms);
-          this.setState({ usersInRooms: rooms });
+          // if (rooms.length > 1) {
+          //   this.setState({ usersInRooms: rooms });
+          // }
+
           // rooms.forEach((room, i) => {
           //   console.log(`for room ${i} i have: ${room.userIds.length} users`);
           // });
@@ -161,19 +166,31 @@ class App extends Component {
 
       setToken(response.data.token, shouldPersist);
       this.setState({ userId: newUser._id, username: newUser.username });
-      //Api.creatUser(response.config.data);
-      // .then(res => {
-      //   console.log("user has been created: ", res);
-      //   this.setState({ userId: res.data._id, username: res.data.username });
-      // });
     });
   };
 
+  usernameClick = username => {
+    Api.getUser(username).then(res => {
+      console.log("clicked screename, ", res);
+      this.setState({ clickedUser: res });
+      console.log("my clicked user state: ", this.state.clickedUser);
+    });
+  };
+
+  editProfile = () => {
+    this.setState({ editProfile: true, clickedUser: false });
+  };
+
   render() {
-    //console.log(...this.state.joinableRooms, this.state.joinedRooms);
     return (
       <div className="app">
-        <Navbar onLogin={this.login} onSignUp={this.signUp} />
+        <Navbar
+          onLogin={this.login}
+          onSignUp={this.signUp}
+          editProfile={this.editProfile}
+          valueOfEdit={this.state.editProfile}
+          currentUser={this.state.username}
+        />
 
         {!this.state.username ? (
           ""
@@ -186,6 +203,7 @@ class App extends Component {
               rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
             />
             <MessageList
+              usernameClick={this.usernameClick}
               roomId={this.state.roomId}
               messages={this.state.messages}
             />
@@ -197,6 +215,9 @@ class App extends Component {
           </Wrapper>
         )}
         <Profile
+          username={this.state.username}
+          editProfile={this.editProfile}
+          clickedUser={this.state.clickedUser}
           userId={this.state.userId}
           signupSubmitted={!!this.state.username}
         />

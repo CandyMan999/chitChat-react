@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
+//import { Link } from "react-router-dom";//
 
 class Navbar extends Component {
   state = {
@@ -8,7 +8,9 @@ class Navbar extends Component {
     email: "",
     shouldPersist: false,
     login: false,
-    signup: false
+    signup: false,
+    loginSubmitted: false,
+    signInSubmitted: false
   };
 
   handleChange = (e, name) => this.setState({ [name]: e.target.value });
@@ -21,6 +23,8 @@ class Navbar extends Component {
 
   handleSignUp = e => {
     e.preventDefault();
+    // this.props.editProfile();
+    this.setState({ signInSubmitted: true });
     const { username, email, password, shouldPersist } = this.state;
     this.props.onSignUp({ username, email, password, shouldPersist });
   };
@@ -29,23 +33,27 @@ class Navbar extends Component {
     return (
       <nav style={{ color: "mediumaquamarine" }} className="navbar ">
         {" "}
-        <div className="navButtons">
-          <button
-            style={{ border: `5px  solid${this.state.login ? " gold" : ""}` }}
-            onClick={() => this.setState({ login: true, signup: false })}
-            className="sign-up"
-          >
-            Login
-          </button>
-          <button
-            style={{ border: `5px solid${this.state.signup ? " gold" : ""}` }}
-            onClick={() => this.setState({ login: false, signup: true })}
-            className="sign-up"
-          >
-            Sign-Up
-          </button>
-        </div>
-        {this.state.login ? (
+        {this.props.currentUser ? (
+          ""
+        ) : (
+          <div className="navButtons">
+            <button
+              style={{ border: `5px  solid${this.state.login ? " gold" : ""}` }}
+              onClick={() => this.setState({ login: true, signup: false })}
+              className="sign-up"
+            >
+              Login
+            </button>
+            <button
+              style={{ border: `5px solid${this.state.signup ? " gold" : ""}` }}
+              onClick={() => this.setState({ login: false, signup: true })}
+              className="sign-up"
+            >
+              Sign-Up
+            </button>
+          </div>
+        )}
+        {this.state.login && !this.props.currentUser ? (
           <form>
             <input
               style={{ margin: "2px" }}
@@ -65,6 +73,7 @@ class Navbar extends Component {
             <button id="logSubmit" onClick={this.handleLogin}>
               Submit
             </button>
+            Keep me signed in
             <input
               onChange={e => this.handleChange(e, "shouldPersist")}
               type="checkbox"
@@ -75,7 +84,7 @@ class Navbar extends Component {
         ) : (
           ""
         )}{" "}
-        {this.state.signup ? (
+        {this.state.signup && !this.state.signInSubmitted ? (
           <form>
             <input
               style={{ margin: "2px" }}
@@ -111,6 +120,13 @@ class Navbar extends Component {
               value={!this.state.shouldPersist}
             />
           </form>
+        ) : (
+          ""
+        )}{" "}
+        {this.props.currentUser || this.props.valueOfEdit ? (
+          <h3 id="editProfile" onClick={this.props.editProfile}>
+            Edit Profile
+          </h3>
         ) : (
           ""
         )}

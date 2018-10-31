@@ -17,9 +17,8 @@ const tokenAuthenticate = (req, res, next) => {
   const token = authHeader.split(" ")[1]; //TODO check for bearer keyword
   console.log(`!!${token}!!`);
   return jwt.verify(token, SECRET, (err, decoded) => {
-    console.log("before err check");
     if (err || !decoded) return res.status(401).json(err);
-    console.log("got past first arg");
+
     return db.User.findById(decoded.id)
       .then(user => {
         req.user = user;
@@ -29,16 +28,15 @@ const tokenAuthenticate = (req, res, next) => {
   });
 };
 
-router.get("/api/users/:id", (req, res) => {
+router.get("/api/users/:username", (req, res) => {
   db.User.findOne({
-    _id: req.params.id
+    username: req.params.username
   })
     .then(response => res.json(response))
     .catch(err => console.log("had error getting user: ", err));
 });
 
 router.post("/api/users", async (req, res) => {
-  console.log("seeing if this hits");
   try {
     const userRes = await db.User.create(req.body);
     console.log("this is my user: ", userRes);
@@ -47,7 +45,6 @@ router.post("/api/users", async (req, res) => {
       expiresIn: "14 days"
     });
     console.log("my token: ", token);
-    // res.json({ user, token });
 
     chatkit
       .createUser({
@@ -77,33 +74,12 @@ router.post("/login", (req, res) => {
         });
         console.log("my token: ", token);
         res.json({ user, token });
-        console.log(user);
       });
     })
     .catch(err => console.log(err));
 });
 
-// router.post("/users", (req, res) => {
-//   const { username } = req.body;
-//   chatkit
-//     .createUser({
-//       id: username,
-//       name: username
-//     })
-//     .then(() => res.sendStatus(201))
-//     .catch(error => {
-//       if (error.error_type === "services/chatkit/user_already_exists") {
-//         res.sendStatus(200);
-//       } else {
-//         res.status(error.status).json(error);
-//       }
-//     });
-// });
-
 router.put("/api/users/:id", tokenAuthenticate, (req, res) => {
-  console.log("did this fire");
-
-  console.log("!!!!!", typeof req.params.id, typeof req.user._id);
   if (req.params.id !== req.user._id.toString()) {
     return res.sendStatus(401);
   }

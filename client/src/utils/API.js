@@ -4,8 +4,8 @@ import { getToken } from "./helpers";
 export default {
   creatUser: data => axios.post("/api/users", data),
 
-  getUser: id =>
-    axios.get(`/api/users/${id}`).then(res => {
+  getUser: username =>
+    axios.get(`/api/users/${username}`).then(res => {
       return res.data;
     }),
 
