@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 //import { Link } from "react-router-dom";//
+import { clearToken } from "../../utils/helpers";
 
 class Navbar extends Component {
   state = {
@@ -27,6 +28,11 @@ class Navbar extends Component {
     this.setState({ signInSubmitted: true });
     const { username, email, password, shouldPersist } = this.state;
     this.props.onSignUp({ username, email, password, shouldPersist });
+  };
+
+  logOut = () => {
+    clearToken();
+    window.location.reload();
   };
 
   render() {
@@ -124,9 +130,21 @@ class Navbar extends Component {
           ""
         )}{" "}
         {this.props.currentUser || this.props.valueOfEdit ? (
-          <h3 id="editProfile" onClick={this.props.editProfile}>
-            Edit Profile
-          </h3>
+          <Fragment>
+            <button onClick={this.logOut} className="logOut">
+              LogOut
+            </button>{" "}
+            <h3 id="editProfile" onClick={this.props.editProfile}>
+              <img
+                style={{ height: "30px" }}
+                src={
+                  "https://cdn3.iconfinder.com/data/icons/simplius-pack/512/pencil_and_paper-512.png"
+                }
+                alt="edit"
+              />{" "}
+              Edit Profile
+            </h3>
+          </Fragment>
         ) : (
           ""
         )}

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { ChatManager, TokenProvider } from "@pusher/chatkit";
 import RoomList from "./components/room-list";
 import MessageList from "./components/message-list";
@@ -13,6 +13,10 @@ import Api from "../src/utils/API";
 
 import { tokenURL, instanceLocator } from "./config";
 import { setToken, getToken } from "./utils/helpers";
+
+import { connect } from "react-redux";
+
+import { fetchUser } from "./core/Users";
 
 class App extends Component {
   state = {
@@ -170,6 +174,7 @@ class App extends Component {
   };
 
   usernameClick = username => {
+    this.props.fetchUser();
     Api.getUser(username).then(res => {
       console.log("clicked screename, ", res);
       this.setState({ clickedUser: res });
@@ -226,4 +231,11 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  fetchUser: payload => dispatch(fetchUser(payload))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(App);

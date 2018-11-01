@@ -130,6 +130,10 @@ body {
   height: 60px;
 }
 
+#create-room-btn:hover {
+  cursor: pointer;
+  text-shadow: 1px 1px white;
+}
 .join-a-room {
   margin-top: 10%;
   margin-left: 40%;
@@ -150,7 +154,10 @@ body {
   color: mediumaquamarine;
   font-weight: 500;
   display: -webkit-inline-box;
+}
+.message-username:hover {
   cursor: pointer;
+  text-shadow: 2px 2px gold;
 }
 
 #submit {
@@ -162,10 +169,37 @@ body {
 }
 
 .profile {
-  background: aqua;
+  background: beige;
   grid-area: p;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
-#editProfile {
+#editProfile:hover {
+  cursor: pointer;
+  text-shadow: 2px 2px white;
+}
+
+.logOut:hover {
+  color: mediumaquamarine;
+  cursor: pointer;
+  border: solid 2px gold;
+}
+
+.headers {
+  color: mediumaquamarine;
+}
+#profileSubmit {
+  width: 200px;
+  margin-top: 10%;
+  margin-left: 30%;
+}
+
+#profileSubmit:hover {
+  color: mediumaquamarine;
+  cursor: pointer;
+  border: solid 2px gold;
+}
+button:hover {
   cursor: pointer;
 }

@@ -50,7 +50,11 @@ class Profile extends Component {
                   <Dropzone
                     accept="image/jpeg, image/png"
                     onDrop={(accepted, rejected) => {
-                      this.setState({ accepted, rejected });
+                      this.setState({
+                        accepted: [...this.state.accepted, accepted],
+                        rejected
+                      });
+                      console.log("accepted files: ", this.state.accepted);
                     }}
                   >
                     <p>
@@ -189,7 +193,7 @@ class Profile extends Component {
         )}{" "}
         {this.props.clickedUser ? (
           <main className="profile">
-            <h1>Profile</h1>
+            <h1 className="headers">Profile</h1>
             <h3>{this.props.clickedUser.username}</h3>{" "}
             <p>
               {" "}
@@ -201,66 +205,81 @@ class Profile extends Component {
               {this.props.clickedUser.sex} {this.props.clickedUser.age}
             </p>
             <hr />
-            <h4 style={{ color: "red" }}>Intro: </h4>
+            <h4 className="headers">Intro: </h4>
             <p>{this.props.clickedUser.intro}</p>
             <hr />
             <p>
-              <strong>Occupation: </strong>
+              <span className="headers">
+                <strong>Occupation: </strong>
+              </span>
               {this.props.clickedUser.occupation}
             </p>
             <hr />
             <p>
-              <strong>
-                <img
-                  style={{ height: "30px" }}
-                  src={
-                    "https://cdn2.iconfinder.com/data/icons/life-moments/404/draft-512.png"
-                  }
-                  alt="maryJ"
-                />
-                Drink:{" "}
-              </strong>
+              <span className="headers">
+                {" "}
+                <strong>
+                  <img
+                    style={{ height: "30px" }}
+                    src={
+                      "https://cdn2.iconfinder.com/data/icons/life-moments/404/draft-512.png"
+                    }
+                    alt="maryJ"
+                  />
+                  Drink:{" "}
+                </strong>
+              </span>
               {this.props.clickedUser.drink}
             </p>
             <hr />
             <p>
-              <strong>
+              <span className="headers">
                 {" "}
-                <img
-                  style={{ height: "30px" }}
-                  src={"http://cdn.onlinewebfonts.com/svg/img_490627.png"}
-                  alt="maryJ"
-                />
-                Smoke:{" "}
-              </strong>
+                <strong>
+                  {" "}
+                  <img
+                    style={{ height: "30px" }}
+                    src={"http://cdn.onlinewebfonts.com/svg/img_490627.png"}
+                    alt="maryJ"
+                  />
+                  Smoke:{" "}
+                </strong>
+              </span>
+
               {this.props.clickedUser.smoke}
             </p>
             <hr />
             <p>
-              <strong>
-                <img
-                  style={{ height: "30px" }}
-                  src={
-                    "https://cdn3.iconfinder.com/data/icons/marijuana/480/Solid_Leaf-512.png"
-                  }
-                  alt="maryJ"
-                />
-                420:{" "}
-              </strong>
+              <span className="headers">
+                <strong>
+                  <img
+                    style={{ height: "30px" }}
+                    src={
+                      "https://cdn3.iconfinder.com/data/icons/marijuana/480/Solid_Leaf-512.png"
+                    }
+                    alt="maryJ"
+                  />
+                  420:{" "}
+                </strong>
+              </span>
+
               {this.props.clickedUser.marijuana}
             </p>
             <hr />
             <p>
-              <strong>
-                <img
-                  style={{ height: "30px" }}
-                  src={
-                    "https://cdn4.iconfinder.com/data/icons/baby-child-children-kids/100/baby-04-512.png"
-                  }
-                  alt="maryJ"
-                />
-                Kids:{" "}
-              </strong>
+              <span className="headers">
+                <strong>
+                  <img
+                    style={{ height: "30px" }}
+                    src={
+                      "https://cdn4.iconfinder.com/data/icons/baby-child-children-kids/100/baby-04-512.png"
+                    }
+                    alt="maryJ"
+                  />
+                  Kids:{" "}
+                </strong>
+              </span>
+
               {this.props.clickedUser.kids ? "yes" : "no"}
             </p>
           </main>
