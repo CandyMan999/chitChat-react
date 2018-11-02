@@ -61,15 +61,15 @@ class App extends Component {
         .then(currentUser => {
           this.currentUser = currentUser;
 
-          //const rooms = this.currentUser.rooms;
-          // console.log(rooms);
-          // if (rooms.length > 1) {
-          //   this.setState({ usersInRooms: rooms });
-          // }
+          const rooms = this.currentUser.rooms;
+          console.log(rooms);
+          if (rooms.length > 1) {
+            this.setState({ usersInRooms: rooms });
+          }
 
-          // rooms.forEach((room, i) => {
-          //   console.log(`for room ${i} i have: ${room.userIds.length} users`);
-          // });
+          rooms.forEach((room, i) => {
+            console.log(`for room ${i} i have: ${room.userIds.length} users`);
+          });
           this.getRooms();
         })
         .catch(err => console.log("error on connecting: ", err));

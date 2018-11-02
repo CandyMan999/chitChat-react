@@ -5,12 +5,30 @@ const router = express.Router();
 const Chatkit = require("pusher-chatkit-server");
 const jwt = require("jsonwebtoken");
 const SECRET = "shhhh";
+const multer = require("multer");
+const cloudinary = require("cloudinary");
+const cloudinaryStorage = require("multer-storage-cloudinary");
+const fs = require("fs");
+require("dotenv").config();
 
 const chatkit = new Chatkit.default({
-  instanceLocator: "v1:us1:a55d6d92-ceb4-4e02-a75e-b47722122dcb",
-  key:
-    "1e28b3ff-92aa-4df1-a5db-2a113523ad2f:erUgKYEhx/4tA5mf8KZxL6ey+f7Qu/lKPael4YBx5Ts="
+  instanceLocator: process.env.INSTANCE_LOCATOR,
+  key: process.env.CHATKIT_KEY
 });
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "aolisback",
+  allowedFormats: ["jpg", "png"],
+  transformation: [{ width: 500, height: 500, crop: "limit" }]
+});
+const parser = multer({ storage: storage });
 
 const tokenAuthenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -27,6 +45,50 @@ const tokenAuthenticate = (req, res, next) => {
       .catch(err => res.status(401).json(err));
   });
 };
+
+router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
+  //console.log("req: ", req.files); // to see what is returned to you
+  console.log("!!!!!!!!!", req.file);
+  // const foo = fs.readFile(req.file.buffer);
+  // cloudinary.v2.uploader.upload(foo, {}, () => console.log("anything"));
+
+  const image = {
+    pics: { url: req.file.url }
+  };
+  // image.url = req.file.url;
+  // image.id = req.file.public_id;
+  console.log("this is what I am trying to store: ", image);
+  //   db.User.findByIdAndUpdate(req.params.id, image, { new: true })
+  //     .then(response => {
+  //       res.json(response);
+  //     })
+  //     .catch(err => console.log("we had an error on updating the user: ", err));
+  // });
+
+  db.Picture.create(image) // save image information in database
+    .then(function(dbImage) {
+      console.log("image created");
+      return db.User.findOneAndUpdate(
+        {
+          _id: req.params.id
+        },
+        { $push: { pics: dbImage._id } },
+        {
+          new: true
+        }
+      )
+        .then(function(dbImage) {
+          console.log("i found something: ", dbImage);
+          res.json(dbImage);
+        })
+        .catch(function(err) {
+          res.json(err);
+        });
+    });
+
+  // .then(newImage => res.json(newImage))
+  // .catch(err => console.log(err));
+});
 
 router.get("/api/users/:username", (req, res) => {
   db.User.findOne({

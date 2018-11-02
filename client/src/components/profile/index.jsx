@@ -18,7 +18,13 @@ class Profile extends Component {
     rejected: []
   };
 
-  handleChange = (e, name) => this.setState({ [name]: e.target.value });
+  handleChange = (e, name) => {
+    this.setState({ [name]: e.target.value });
+  };
+
+  fileChangeHandler = e => {
+    this.setState({ image: e.target.files[0] });
+  };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -28,12 +34,33 @@ class Profile extends Component {
     Api.updateUser(id, omit(this.state, ["accepted", "rejected"]));
   };
 
+  handleImageSubmit = e => {
+    e.preventDefault();
+  };
+
+  handleOndrop = (accepted, rejected) => {
+    console.log("ondrop: ", accepted);
+
+    this.setState({
+      accepted: [accepted],
+      rejected
+    });
+    const id = this.props.userId;
+    Api.updateImage(id, accepted);
+  };
+  // if (this.state.accepted.length > 1) {
+  //   console.log("my ondrop function fired");
+  //   const id = this.props.userId;
+  //   Api.updateImage(id, this.state.accepted);
+  // }
+
   render() {
     return (
       <Fragment>
         {this.props.signupSubmitted && !this.props.clickedUser ? (
           <main className="profile">
             <h3 className="profileTitle">Your Profile</h3>
+
             <form>
               <textarea
                 rows="4"
@@ -45,17 +72,19 @@ class Profile extends Component {
                 value={this.state.intro}
                 onChange={e => this.handleChange(e, "intro")}
               />
+              {/* <input
+                type="file"
+                name="accepted"
+                onChange={e => this.fileChangeHandler(e)}
+              />
+              <button onClick={this.handleImageSubmit} id="imageSubmit">
+                Submit using POST
+              </button> */}
               <section className="imageSection">
                 <div className="dropzone">
                   <Dropzone
                     accept="image/jpeg, image/png"
-                    onDrop={(accepted, rejected) => {
-                      this.setState({
-                        accepted: [...this.state.accepted, accepted],
-                        rejected
-                      });
-                      console.log("accepted files: ", this.state.accepted);
-                    }}
+                    onDrop={this.handleOndrop}
                   >
                     <p>
                       Try dropping some files here, or click to select files to

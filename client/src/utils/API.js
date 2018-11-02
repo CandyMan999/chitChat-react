@@ -27,5 +27,31 @@ export default {
         Authorization: `Bearer ${getToken()}`
       },
       data
-    })
+    }),
+
+  updateImage: (id, data) => {
+    console.log("file on the backend: ", data);
+    // console.log("update image");
+    // const form = new FormData();
+    // form.append("file", data, data.name);
+
+    axios({
+      url: `/api/users/${id}/image`,
+      method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": `application/x-www-form-urlencoded`
+      },
+      data
+    });
+  }
+  // axios({
+  //   url: `/api/users/${id}/image`,
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": `multipart/form-data`
+  //   },
+  //   form
+  // });
+  //}
 };
