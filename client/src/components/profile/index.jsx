@@ -39,20 +39,16 @@ class Profile extends Component {
   };
 
   handleOndrop = (accepted, rejected) => {
-    console.log("ondrop: ", accepted);
+    console.log("ondrop: ", accepted[0]);
 
     this.setState({
       accepted: [accepted],
       rejected
     });
     const id = this.props.userId;
-    Api.updateImage(id, accepted);
+
+    Api.updateImage(id, accepted[0]);
   };
-  // if (this.state.accepted.length > 1) {
-  //   console.log("my ondrop function fired");
-  //   const id = this.props.userId;
-  //   Api.updateImage(id, this.state.accepted);
-  // }
 
   render() {
     return (
@@ -61,6 +57,17 @@ class Profile extends Component {
           <main className="profile">
             <h3 className="profileTitle">Your Profile</h3>
 
+            <form
+              action={`/api/users/${this.props.userId}/image`}
+              method="post"
+              encType="multipart/form-data"
+            >
+              <input type="file" name="image" />
+              <hr />
+              <input type="submit" value="Submit Photo" />
+              Please submit all photos before saving your profile!!!
+              <hr />
+            </form>
             <form>
               <textarea
                 rows="4"
@@ -72,15 +79,7 @@ class Profile extends Component {
                 value={this.state.intro}
                 onChange={e => this.handleChange(e, "intro")}
               />
-              {/* <input
-                type="file"
-                name="accepted"
-                onChange={e => this.fileChangeHandler(e)}
-              />
-              <button onClick={this.handleImageSubmit} id="imageSubmit">
-                Submit using POST
-              </button> */}
-              <section className="imageSection">
+              {/* <section className="imageSection">
                 <div className="dropzone">
                   <Dropzone
                     accept="image/jpeg, image/png"
@@ -115,7 +114,7 @@ class Profile extends Component {
                     ))}
                   </ul>
                 </aside>
-              </section>
+              </section> */}
               <br />
               <input
                 type="number"
@@ -222,6 +221,15 @@ class Profile extends Component {
         )}{" "}
         {this.props.clickedUser ? (
           <main className="profile">
+            {this.props.clickedUser.pics.map(pic => {
+              return (
+                <img
+                  alt="profile_image"
+                  key={pic.pics._id}
+                  src={pic.pics.url}
+                />
+              );
+            })}
             <h1 className="headers">Profile</h1>
             <h3>{this.props.clickedUser.username}</h3>{" "}
             <p>

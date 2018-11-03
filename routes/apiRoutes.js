@@ -47,7 +47,6 @@ const tokenAuthenticate = (req, res, next) => {
 };
 
 router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
-  //console.log("req: ", req.files); // to see what is returned to you
   console.log("!!!!!!!!!", req.file);
   // const foo = fs.readFile(req.file.buffer);
   // cloudinary.v2.uploader.upload(foo, {}, () => console.log("anything"));
@@ -55,15 +54,8 @@ router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
   const image = {
     pics: { url: req.file.url }
   };
-  // image.url = req.file.url;
-  // image.id = req.file.public_id;
+
   console.log("this is what I am trying to store: ", image);
-  //   db.User.findByIdAndUpdate(req.params.id, image, { new: true })
-  //     .then(response => {
-  //       res.json(response);
-  //     })
-  //     .catch(err => console.log("we had an error on updating the user: ", err));
-  // });
 
   db.Picture.create(image) // save image information in database
     .then(function(dbImage) {
@@ -79,21 +71,19 @@ router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
       )
         .then(function(dbImage) {
           console.log("i found something: ", dbImage);
-          res.json(dbImage);
+          res.redirect("/");
         })
         .catch(function(err) {
           res.json(err);
         });
     });
-
-  // .then(newImage => res.json(newImage))
-  // .catch(err => console.log(err));
 });
 
 router.get("/api/users/:username", (req, res) => {
   db.User.findOne({
     username: req.params.username
   })
+    .populate("pics")
     .then(response => res.json(response))
     .catch(err => console.log("had error getting user: ", err));
 });

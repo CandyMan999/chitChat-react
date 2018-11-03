@@ -35,15 +35,15 @@ export default {
     // const form = new FormData();
     // form.append("file", data, data.name);
 
-    axios({
-      url: `/api/users/${id}/image`,
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": `application/x-www-form-urlencoded`
-      },
-      data
-    });
+    // axios({
+    //   url: `/api/users/${id}/image`,
+    //   method: "POST",
+    //   headers: {
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Content-Type": `application/x-www-form-urlencoded`
+    //   },
+    //   data
+    // });
   }
   // axios({
   //   url: `/api/users/${id}/image`,
