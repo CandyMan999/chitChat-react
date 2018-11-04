@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import Dropzone from "react-dropzone";
 
 import Api from "../../utils/API";
 import omit from "lodash/omit";
@@ -38,18 +37,6 @@ class Profile extends Component {
     e.preventDefault();
   };
 
-  handleOndrop = (accepted, rejected) => {
-    console.log("ondrop: ", accepted[0]);
-
-    this.setState({
-      accepted: [accepted],
-      rejected
-    });
-    const id = this.props.userId;
-
-    Api.updateImage(id, accepted[0]);
-  };
-
   render() {
     return (
       <Fragment>
@@ -79,42 +66,6 @@ class Profile extends Component {
                 value={this.state.intro}
                 onChange={e => this.handleChange(e, "intro")}
               />
-              {/* <section className="imageSection">
-                <div className="dropzone">
-                  <Dropzone
-                    accept="image/jpeg, image/png"
-                    onDrop={this.handleOndrop}
-                  >
-                    <p>
-                      Try dropping some files here, or click to select files to
-                      upload.
-                    </p>
-                    <p>Only *.jpeg and *.png images will be accepted</p>
-                  </Dropzone>
-                </div>
-                <aside>
-                  <p>
-                    <strong>Accepted files</strong>
-                  </p>
-                  <ul>
-                    {this.state.accepted.map(f => (
-                      <li key={f.name}>
-                        {f.name} - {f.size} bytes
-                      </li>
-                    ))}
-                  </ul>
-                  <p>
-                    <strong>Rejected files</strong>
-                  </p>
-                  <ul>
-                    {this.state.rejected.map(f => (
-                      <li key={f.name}>
-                        {f.name} - {f.size} bytes
-                      </li>
-                    ))}
-                  </ul>
-                </aside>
-              </section> */}
               <br />
               <input
                 type="number"
@@ -221,15 +172,59 @@ class Profile extends Component {
         )}{" "}
         {this.props.clickedUser ? (
           <main className="profile">
-            {this.props.clickedUser.pics.map(pic => {
-              return (
-                <img
-                  alt="profile_image"
-                  key={pic.pics._id}
-                  src={pic.pics.url}
+            <div
+              id="carouselExampleFade"
+              className="carousel slide carousel-fade"
+              data-ride="carousel"
+            >
+              <div className="carousel-inner">
+                {this.props.clickedUser.pics.map((pic, i) => {
+                  return (
+                    <div
+                      className={
+                        i === 0 ? "carousel-item active" : "carousel-item "
+                      }
+                    >
+                      <img
+                        key={pic.pics._id}
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          border: "solid 2px mediumaquamarine"
+                        }}
+                        className="d-block w-100"
+                        src={pic.pics.url}
+                        alt="profile_image"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <a
+                className="carousel-control-prev"
+                href="#carouselExampleFade"
+                role="button"
+                data-slide="prev"
+              >
+                <span
+                  className="carousel-control-prev-icon"
+                  aria-hidden="true"
                 />
-              );
-            })}
+                <span className="sr-only">Previous</span>
+              </a>
+              <a
+                className="carousel-control-next"
+                href="#carouselExampleFade"
+                role="button"
+                data-slide="next"
+              >
+                <span
+                  className="carousel-control-next-icon"
+                  aria-hidden="true"
+                />
+                <span className="sr-only">Next</span>
+              </a>
+            </div>
             <h1 className="headers">Profile</h1>
             <h3>{this.props.clickedUser.username}</h3>{" "}
             <p>

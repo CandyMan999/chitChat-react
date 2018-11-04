@@ -26,7 +26,7 @@ const storage = cloudinaryStorage({
   cloudinary: cloudinary,
   folder: "aolisback",
   allowedFormats: ["jpg", "png"],
-  transformation: [{ width: 500, height: 500, crop: "limit" }]
+  transformation: [{ width: 500, height: 281, crop: "scale" }]
 });
 const parser = multer({ storage: storage });
 
