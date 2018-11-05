@@ -231,7 +231,9 @@ class App extends Component {
         ) : (
           ""
         )}
-        <Vidyo />
+        <div className="vidyo">
+          <Vidyo />
+        </div>
       </div>
     );
   }
