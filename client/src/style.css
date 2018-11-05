@@ -29,10 +29,14 @@ body {
     "c c c c p p"
     "c c c c p p"
     "c c c c p p"
-    "v v v g p p"
-    "v v v g p p"
-    "v v v g p p";
+    "v v v g g g"
+    "v v v g g g"
+    "v v v g g g";
 }
+.vidyo {
+  grid-area: v;
+}
+
 .wrapper {
   grid-area: c;
   display: grid;
@@ -46,6 +50,19 @@ body {
     "m m m m m r"
     "m m m m m r"
     "f f f f f n";
+}
+.wrapper:hover {
+  border: solid 3px gold;
+}
+.map:hover {
+  border: solid 3px gold;
+}
+.map {
+  grid-area: g;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 100%;
 }
 .navbar {
   grid-area: b;
@@ -173,6 +190,11 @@ body {
   grid-area: p;
   padding-left: 15px;
   padding-right: 15px;
+  overflow: scroll;
+  height: 100%;
+}
+.profile:hover {
+  border: solid 3px gold;
 }
 
 #editProfile:hover {
@@ -191,7 +213,7 @@ body {
 }
 #profileSubmit {
   width: 200px;
-  margin-top: 10%;
+
   margin-left: 30%;
 }
 

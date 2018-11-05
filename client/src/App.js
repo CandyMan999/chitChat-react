@@ -5,11 +5,13 @@ import MessageList from "./components/message-list";
 import SendMessageForm from "./components/send-message";
 import NewRoomForm from "./components/new-room-form";
 import Profile from "./components/profile";
+import GoogleMap from "./components/map";
 import "./style.css";
 import Navbar from "./components/navbar";
 import Wrapper from "./components/wrapper";
 import axios from "axios";
 import Api from "../src/utils/API";
+import Vidyo from "./components/vidyo";
 
 import { tokenURL, instanceLocator } from "./config";
 import { setToken, getToken } from "./utils/helpers";
@@ -222,6 +224,14 @@ class App extends Component {
           userId={this.state.userId}
           signupSubmitted={!!this.state.username}
         />
+        {this.state.username ? (
+          <main className="map">
+            <GoogleMap />
+          </main>
+        ) : (
+          ""
+        )}
+        <Vidyo />
       </div>
     );
   }
