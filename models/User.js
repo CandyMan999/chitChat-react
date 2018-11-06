@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  isDeleted: {
+  hasAccepted: {
     type: Boolean,
     default: false
   },
@@ -62,6 +62,16 @@ const UserSchema = new mongoose.Schema({
   kids: {
     type: Boolean,
     default: false
+  },
+  location: {
+    lat: {
+      type: Number,
+      default: null
+    },
+    lng: {
+      type: Number,
+      default: null
+    }
   }
 });
 

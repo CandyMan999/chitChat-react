@@ -13,6 +13,7 @@ class Profile extends Component {
     smoke: "",
     marijuana: "",
     kids: false,
+    hasAccepted: false,
     accepted: [],
     rejected: []
   };
@@ -83,69 +84,78 @@ class Profile extends Component {
                 onChange={e => this.handleChange(e, "occupation")}
               />{" "}
               <br />
-              <img
-                style={{ height: "30px" }}
-                src={"https://png.icons8.com/ios/1600/gender.png"}
-                alt="maryJ"
-              />
-              <select onChange={e => this.handleChange(e, "sex")} name="sex">
-                <option value="male" disabled selected>
-                  Gender...?
-                </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-              <img
-                style={{ height: "30px" }}
-                src={
-                  "https://cdn2.iconfinder.com/data/icons/life-moments/404/draft-512.png"
-                }
-                alt="maryJ"
-              />
-              <select
-                onChange={e => this.handleChange(e, "drink")}
-                name="drink"
-              >
-                <option value="" disabled selected>
-                  Drink...?
-                </option>
-                <option value="yes">Yes</option>
-                <option value="socially">Socially</option>
-                <option value="never">Never</option>
-              </select>
-              <img
-                style={{ height: "30px" }}
-                src={"http://cdn.onlinewebfonts.com/svg/img_490627.png"}
-                alt="maryJ"
-              />
-              <select
-                onChange={e => this.handleChange(e, "smoke")}
-                name="smoke"
-              >
-                <option value="" disabled selected>
-                  Smoke...?
-                </option>
-                <option value="yes">Yes</option>
-                <option value="socially">Socially</option>
-                <option value="never">Never</option>
-              </select>
-              <img
-                style={{ height: "30px" }}
-                src={
-                  "https://cdn3.iconfinder.com/data/icons/marijuana/480/Solid_Leaf-512.png"
-                }
-                alt="maryJ"
-              />
-              <select
-                onChange={e => this.handleChange(e, "marijuana")}
-                name="marijuana"
-              >
-                <option value="" disabled selected>
-                  420...?{" "}
-                </option>
-                <option value="friendly">Friendly</option>
-                <option value="unfriendly">Unfriendly</option>
-              </select>
+              <div className="selections">
+                <img
+                  style={{ height: "30px", marginRight: "5px" }}
+                  src={"https://png.icons8.com/ios/1600/gender.png"}
+                  alt="maryJ"
+                />
+                <select onChange={e => this.handleChange(e, "sex")} name="sex">
+                  <option value="male" disabled selected>
+                    Gender...?
+                  </option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div className="selections">
+                <img
+                  style={{ height: "30px", marginRight: "5px" }}
+                  src={
+                    "https://cdn2.iconfinder.com/data/icons/life-moments/404/draft-512.png"
+                  }
+                  alt="maryJ"
+                />
+                <select
+                  onChange={e => this.handleChange(e, "drink")}
+                  name="drink"
+                >
+                  <option value="" disabled selected>
+                    Drink...?
+                  </option>
+                  <option value="yes">Yes</option>
+                  <option value="socially">Socially</option>
+                  <option value="never">Never</option>
+                </select>
+              </div>
+              <br />
+              <div className="selections">
+                <img
+                  style={{ height: "30px", marginRight: "5px" }}
+                  src={"http://cdn.onlinewebfonts.com/svg/img_490627.png"}
+                  alt="maryJ"
+                />
+                <select
+                  onChange={e => this.handleChange(e, "smoke")}
+                  name="smoke"
+                >
+                  <option value="" disabled selected>
+                    Smoke...?
+                  </option>
+                  <option value="yes">Yes</option>
+                  <option value="socially">Socially</option>
+                  <option value="never">Never</option>
+                </select>
+              </div>
+              <div className="selections">
+                <img
+                  style={{ height: "30px", marginRight: "5px" }}
+                  src={
+                    "https://cdn3.iconfinder.com/data/icons/marijuana/480/Solid_Leaf-512.png"
+                  }
+                  alt="maryJ"
+                />
+                <select
+                  onChange={e => this.handleChange(e, "marijuana")}
+                  name="marijuana"
+                >
+                  <option value="" disabled selected>
+                    420...?{" "}
+                  </option>
+                  <option value="friendly">Friendly</option>
+                  <option value="unfriendly">Unfriendly</option>
+                </select>
+              </div>
               <br />
               <input
                 onChange={e => this.handleChange(e, "kids")}
@@ -160,6 +170,21 @@ class Profile extends Component {
                   "https://cdn4.iconfinder.com/data/icons/baby-child-children-kids/100/baby-04-512.png"
                 }
                 alt="maryJ"
+              />
+              <br />
+              <input
+                onChange={e => this.handleChange(e, "hasAccepted")}
+                type="checkbox"
+                name="hasAccepted"
+                value={true}
+              />
+              <strong>I agree to share my location</strong>
+              <img
+                style={{ height: "30px" }}
+                src={
+                  "https://banner2.kisspng.com/20180605/gv/kisspng-computer-icons-clip-art-ubicacion-5b16ff4e0ed569.6310568615282338060608.jpg"
+                }
+                alt="mapIcon"
               />
               <br />
               <button onClick={this.handleSubmit} id="profileSubmit">
@@ -181,6 +206,7 @@ class Profile extends Component {
                 {this.props.clickedUser.pics.map((pic, i) => {
                   return (
                     <div
+                      key={pic.pics._id}
                       className={
                         i === 0 ? "carousel-item active" : "carousel-item "
                       }

@@ -35,6 +35,11 @@ body {
 }
 .vidyo {
   grid-area: v;
+  display: grid;
+}
+iframe {
+  height: 100%;
+  width: 100%;
 }
 
 .wrapper {
@@ -55,6 +60,9 @@ body {
   border: solid 3px gold;
 }
 .map:hover {
+  border: solid 3px gold;
+}
+.vidyo:hover {
   border: solid 3px gold;
 }
 .map {
@@ -224,4 +232,15 @@ body {
 }
 button:hover {
   cursor: pointer;
+}
+
+.videoTitle {
+  text-align: center;
+  color: gold;
+  background: #6d7d78;
+}
+
+.selections {
+  display: inline-block;
+  margin: 10px;
 }

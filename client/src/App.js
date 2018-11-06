@@ -30,17 +30,25 @@ class App extends Component {
     userId: null,
     usersInRooms: null,
     clickedUser: null,
-    editProfile: false
+    editProfile: false,
+    me: null
   };
 
   componentDidMount = () => {
     const token = getToken();
-    console.log("my token when the component mounted: ", token);
+
     if (token) {
       Api.getMe(token)
-        .then(({ data: { _id: userId, username } }) => {
-          this.setState({ userId, username });
+        .then(res => {
+          this.setState({
+            me: res.data,
+            userId: res.data._id,
+            username: res.data.username
+          });
         })
+        // ({ data: { _id: userId, username } }) => {
+        //   this.setState({ userId, username });
+        // })
         .catch(err => console.log("something went wrong with token: ", err));
     }
   };
@@ -226,13 +234,16 @@ class App extends Component {
         />
         {this.state.username ? (
           <main className="map">
-            <GoogleMap />
+            <GoogleMap me={this.state.me} />
           </main>
         ) : (
           ""
         )}
         <div className="vidyo">
-          <Vidyo />
+          <Vidyo
+            username={this.state.username}
+            clickedUser={this.state.clickedUser}
+          />
         </div>
       </div>
     );

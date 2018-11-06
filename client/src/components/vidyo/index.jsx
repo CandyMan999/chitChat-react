@@ -1,44 +1,51 @@
 import React, { Component, Fragment } from "react";
 
 class Vidyo extends Component {
-  state = {
-    roomId: null
-  };
-
-  makeRoomid = () => {
-    let text = "";
-    const possible =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (let i = 0; i < 7; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    this.setState({ roomId: text });
-    console.log("chat roomId: ", this.state.roomId);
-  };
+  state = {};
 
   render() {
     return (
       <Fragment>
         {" "}
-        {this.state.roomId ? (
+        {this.props.username && !this.props.clickedUser ? (
           <div>
             {" "}
-            <button style={{ position: "absolute" }}>
-              test {this.state.roomId}
-            </button>
+            <h5 className="videoTitle">
+              Join your own channel or click someone elses SCREEName to join
+              their channel!
+            </h5>
             <iframe
               title="chatshit"
-              src={`https://tokbox.com/embed/embed/ot-embed.js?embedId=6ee527d4-9d0f-43eb-b042-b6cae60f360f&room=default&iframe=true`}
-              width="800px"
-              height="640px"
+              src={`https://tokbox.com/embed/embed/ot-embed.js?embedId=6ee527d4-9d0f-43eb-b042-b6cae60f360f&room=${
+                this.props.username
+              }&iframe=true`}
+              allow="microphone; camera"
+            />
+          </div>
+        ) : this.props.clickedUser ? (
+          <div>
+            {" "}
+            {this.props.clickedUser.username === this.props.username ? (
+              <h5 className="videoTitle">
+                Join your own channel or click someone elses SCREEName to join
+                their channel!
+              </h5>
+            ) : (
+              <h5 className="videoTitle">
+                Join {this.props.clickedUser.username}
+                's channel or clicked your SCREEName to join your own!
+              </h5>
+            )}
+            <iframe
+              title="chatshit"
+              src={`https://tokbox.com/embed/embed/ot-embed.js?embedId=6ee527d4-9d0f-43eb-b042-b6cae60f360f&room=${
+                this.props.clickedUser.username
+              }&iframe=true`}
               allow="microphone; camera"
             />
           </div>
         ) : (
-          <div>
-            <button onClick={this.makeRoomid}>Join this chat</button>
-          </div>
+          ""
         )}
       </Fragment>
     );
