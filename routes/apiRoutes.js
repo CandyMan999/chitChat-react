@@ -33,7 +33,7 @@ const parser = multer({ storage: storage });
 const tokenAuthenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token = authHeader.split(" ")[1]; //TODO check for bearer keyword
-  console.log(`!!${token}!!`);
+
   return jwt.verify(token, SECRET, (err, decoded) => {
     if (err || !decoded) return res.status(401).json(err);
 
@@ -48,8 +48,6 @@ const tokenAuthenticate = (req, res, next) => {
 
 router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
   console.log("!!!!!!!!!", req.file);
-  // const foo = fs.readFile(req.file.buffer);
-  // cloudinary.v2.uploader.upload(foo, {}, () => console.log("anything"));
 
   const image = {
     pics: { url: req.file.url }
@@ -91,7 +89,12 @@ router.get("/api/users/:username", (req, res) => {
 router.post("/api/users", async (req, res) => {
   try {
     const userRes = await db.User.create(req.body);
-    console.log("this is my user: ", userRes);
+    //console.log("this is my user: ", userRes);
+
+    db.User.findOneAndUpdate(
+      { username: userRes.username },
+      { $set: { isLoggedIn: true } }
+    ).catch(err => console.log(err));
 
     const token = jwt.sign({ id: userRes._id }, SECRET, {
       expiresIn: "14 days"
@@ -124,8 +127,15 @@ router.post("/login", (req, res) => {
         const token = jwt.sign({ id: user._id }, SECRET, {
           expiresIn: "14 days"
         });
-        console.log("my token: ", token);
-        res.json({ user, token });
+
+        db.User.findOneAndUpdate(
+          { username: req.body.username },
+          { $set: { isLoggedIn: true } }
+        )
+          .then(() => {
+            res.json({ user, token });
+          })
+          .catch(err => res.json(err));
       });
     })
     .catch(err => console.log(err));
@@ -148,6 +158,28 @@ router.get("/api/me", tokenAuthenticate, (req, res) => {
   } else {
     res.sendStatus(404);
   }
+});
+
+router.get("/api/users", (req, res) => {
+  db.User.find({
+    hasAccepted: true,
+    isLoggedIn: true
+  })
+    .populate("pics")
+    .then(users => {
+      res.json(users);
+    })
+    .catch(err => res.json(err));
+});
+
+router.put("/api/logout/:username", (req, res) => {
+  console.log("###########", req.params.username);
+  db.User.findOneAndUpdate(
+    { username: req.params.username },
+    { $set: { isLoggedIn: false } }
+  )
+    .then(user => res.json(user))
+    .catch(err => console.log(err));
 });
 
 module.exports = router;

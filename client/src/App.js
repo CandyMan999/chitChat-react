@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { ChatManager, TokenProvider } from "@pusher/chatkit";
 import RoomList from "./components/room-list";
 import MessageList from "./components/message-list";
@@ -30,8 +30,7 @@ class App extends Component {
     userId: null,
     usersInRooms: null,
     clickedUser: null,
-    editProfile: false,
-    me: null
+    editProfile: false
   };
 
   componentDidMount = () => {
@@ -39,16 +38,9 @@ class App extends Component {
 
     if (token) {
       Api.getMe(token)
-        .then(res => {
-          this.setState({
-            me: res.data,
-            userId: res.data._id,
-            username: res.data.username
-          });
+        .then(({ data: { _id: userId, username } }) => {
+          this.setState({ userId, username });
         })
-        // ({ data: { _id: userId, username } }) => {
-        //   this.setState({ userId, username });
-        // })
         .catch(err => console.log("something went wrong with token: ", err));
     }
   };
@@ -234,7 +226,7 @@ class App extends Component {
         />
         {this.state.username ? (
           <main className="map">
-            <GoogleMap me={this.state.me} />
+            <GoogleMap clickedUser={this.state.clickedUser} />
           </main>
         ) : (
           ""

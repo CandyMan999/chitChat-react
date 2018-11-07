@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 //import { Link } from "react-router-dom";//
 import { clearToken } from "../../utils/helpers";
+import Api from "../../utils/API";
 
 class Navbar extends Component {
   state = {
@@ -32,6 +33,7 @@ class Navbar extends Component {
 
   logOut = () => {
     clearToken();
+    Api.logOut(this.state.username);
     window.location.reload();
   };
 

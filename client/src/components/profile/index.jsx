@@ -252,7 +252,12 @@ class Profile extends Component {
               </a>
             </div>
             <h1 className="headers">Profile</h1>
-            <h3>{this.props.clickedUser.username}</h3>{" "}
+            <h3>
+              {this.props.clickedUser.username}
+              <span style={{ float: "right", color: "red" }}>
+                {this.props.clickedUser.isLoggedIn ? "Online Now" : "Offline"}
+              </span>
+            </h3>{" "}
             <p>
               {" "}
               <img
@@ -260,7 +265,11 @@ class Profile extends Component {
                 src={"https://png.icons8.com/ios/1600/gender.png"}
                 alt="maryJ"
               />
-              {this.props.clickedUser.sex} {this.props.clickedUser.age}
+              {this.props.clickedUser.sex} {this.props.clickedUser.age}{" "}
+              <span style={{ float: "right", color: "red" }}>
+                Location Status{" "}
+                {this.props.clickedUser.hasAccepted ? "Visible" : "Private"}
+              </span>
             </p>
             <hr />
             <h4 className="headers">Intro: </h4>

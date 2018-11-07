@@ -4,6 +4,18 @@ import { getToken } from "./helpers";
 export default {
   creatUser: data => axios.post("/api/users", data),
 
+  logOut: username => {
+    console.log("username logout: ", username);
+    axios.put(`/api/logout/${username}`).then(res => {
+      return res.data;
+    });
+  },
+
+  getAllUsers: () =>
+    axios.get("/api/users").then(res => {
+      return res.data;
+    }),
+
   getUser: username =>
     axios.get(`/api/users/${username}`).then(res => {
       return res.data;
@@ -19,7 +31,7 @@ export default {
     }),
 
   updateUser: (id, data) =>
-    console.log(id) ||
+    console.log(id, data) ||
     axios({
       url: `/api/users/${id}`,
       method: "PUT",

@@ -1,62 +1,128 @@
 import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import Api from "../../utils/API";
+import { getToken } from "../../utils/helpers";
 
 class GoogleMap extends Component {
   state = {
-    userLocation: this.props.me.userLocation
+    userLocation: null,
+    me: null,
+    users: null,
+    showingInfoWindow: false,
+    activeMarker: {},
+    selectedUser: {}
   };
 
   // TODO need to pass user object down to here or at least userLocation
 
   componentDidMount() {
-    if (!this.state.userLocation) {
-      console.log("!!!", this.props.me);
-      navigator.geolocation.getCurrentPosition(({ coords }) => {
-        console.log("!!!!!!", coords);
-        console.log("about to set state");
-        Api.updateUser(this.props.me._id, {
-          location: { lat: coords.latitude, lng: coords.longitude }
-        }).then(() => {
-          // TODO get mongo id passed down to this component as part of me
-          this.setState({
-            userLocation: {
-              lat: coords.latitude,
-              lng: coords.longitude
-            }
+    Api.getAllUsers()
+      .then(res => {
+        this.setState({ users: res });
+      })
+      .catch(err => console.log(err));
+  }
+
+  componentDidUpdate() {
+    const token = getToken();
+
+    if (!this.state.userLocation && token) {
+      Api.getMe(token).then(meRes => {
+        navigator.geolocation.getCurrentPosition(({ coords }) => {
+          Api.updateUser(meRes.data._id, {
+            location: { lat: coords.latitude, lng: coords.longitude }
+          }).then(() => {
+            this.setState({
+              userLocation: {
+                lat: coords.latitude,
+                lng: coords.longitude
+              }
+            });
+          });
+          Api.getMe(token).then(newMe => {
+            this.setState({ me: newMe.data });
           });
         });
       });
     }
   }
 
-  onMarkerClick = () => {
-    if (this.props.me.hasAccepted) {
-      alert(this.props.me.username);
-    } else {
-      alert("you clicked me");
+  onMarkerClick = (props, marker, e) => {
+    this.setState({
+      selectedUser: props,
+      activeMarker: marker,
+      showingInfoWindow: true
+    });
+  };
+
+  onMapClicked = props => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      });
     }
   };
 
   render() {
-    return this.state.userLocation ? (
+    return this.state.userLocation && this.state.me ? (
       <Map
+        onClick={this.onMapClicked}
         google={this.props.google}
-        zoom={14}
+        zoom={7}
         style={{ width: "100%", height: "100%" }}
         initialCenter={this.state.userLocation}
       >
-        <Marker
+        {/* <Marker
           postition={
-            this.props.me.location && this.props.me.hasAccepted
+            this.state.me.location && this.state.me.hasAccepted
               ? this.state.userLocation
               : null
           }
           onClick={this.onMarkerClick}
           name={"Current location"}
-        />
-
-        <InfoWindow onClose={this.onInfoWindowClose} />
+        /> */}
+        {this.state.users.map(
+          user =>
+            user.pics.length >= 1 ? (
+              <Marker
+                key={user._id}
+                postition={user.location}
+                onClick={this.onMarkerClick}
+                name={user.username}
+                image={user.pics[0].pics.url}
+              />
+            ) : (
+              <Marker
+                key={user._id}
+                postition={user.location}
+                onClick={this.onMarkerClick}
+                name={user.username}
+              />
+            )
+        )}
+        <InfoWindow
+          marker={this.state.activeMarker}
+          visible={this.state.showingInfoWindow}
+        >
+          <div>
+            <h1>{this.state.selectedUser.name}</h1>
+            <img
+              style={{
+                width: "100%",
+                height: "auto",
+                border: "solid 2px mediumaquamarine"
+              }}
+              className="d-block w-100"
+              src={
+                this.state.selectedUser.image
+                  ? this.state.selectedUser.image
+                  : "https://static.thenounproject.com/png/994628-200.png"
+              }
+              alt="profile_image"
+            />
+          </div>
+        </InfoWindow>
       </Map>
     ) : null;
   }

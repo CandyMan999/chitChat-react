@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Message from "./message";
 import ReactDOM from "react-dom";
-import Api from "../../utils/API";
 
 class MessageList extends Component {
   componentWillUpdate() {
@@ -28,6 +27,7 @@ class MessageList extends Component {
     return (
       <div className="message-list">
         {this.props.messages.map((message, index) => {
+          console.log("!!#!#!#!#!#", message, index);
           return (
             <Message
               usernameClick={this.props.usernameClick}

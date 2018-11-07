@@ -16,6 +16,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isLoggedIn: {
+    type: Boolean,
+    default: false
+  },
   signUpDate: {
     type: Date,
     default: Date.now()

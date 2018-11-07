@@ -33,7 +33,7 @@ class Vidyo extends Component {
             ) : (
               <h5 className="videoTitle">
                 Join {this.props.clickedUser.username}
-                's channel or clicked your SCREEName to join your own!
+                's channel or click your SCREEName to join your own!
               </h5>
             )}
             <iframe
