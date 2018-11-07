@@ -2,6 +2,8 @@ import React, { Component, Fragment } from "react";
 //import { Link } from "react-router-dom";//
 import { clearToken } from "../../utils/helpers";
 import Api from "../../utils/API";
+import Sound from "react-sound";
+import soundfile from "../../utils/dial.mp3";
 
 class Navbar extends Component {
   state = {
@@ -147,6 +149,18 @@ class Navbar extends Component {
               Edit Profile
             </h3>
           </Fragment>
+        ) : (
+          ""
+        )}
+        {this.state.username === "" ? (
+          <Sound
+            url={soundfile}
+            playStatus={Sound.status.PLAYING}
+            playFromPosition={300 /* in milliseconds */}
+            onLoading={this.handleSongLoading}
+            onPlaying={this.handleSongPlaying}
+            onFinishedPlaying={this.handleSongFinishedPlaying}
+          />
         ) : (
           ""
         )}
