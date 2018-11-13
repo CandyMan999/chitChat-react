@@ -10,15 +10,16 @@ import "./style.css";
 import Navbar from "./components/navbar";
 import Wrapper from "./components/wrapper";
 import axios from "axios";
-import Api from "../src/utils/API";
+import Api from "./utils/API";
 import Vidyo from "./components/vidyo";
 
 import { tokenURL, instanceLocator } from "./config";
 import { setToken, getToken } from "./utils/helpers";
 
 import { connect } from "react-redux";
-
+import { fetchMe, login } from "./core/Session";
 import { fetchUser } from "./core/Users";
+import API from "./utils/API";
 
 class App extends Component {
   state = {
@@ -26,33 +27,31 @@ class App extends Component {
     messages: [],
     joinableRooms: [],
     joinedRooms: [],
-    username: null,
-    userId: null,
     usersInRooms: null,
     clickedUser: null,
     editProfile: false
   };
 
   componentDidMount = () => {
-    const token = getToken();
+    //const token = getToken();
 
-    if (token) {
-      Api.getMe(token)
-        .then(({ data: { _id: userId, username } }) => {
-          this.setState({ userId, username });
-        })
-        .catch(err => console.log("something went wrong with token: ", err));
-    }
+    this.props.fetchMe();
+
+    // if (token) {
+    //   Api.getMe(token)
+    //     .then(({ data: { _id: userId, username } }) => {
+    //       this.setState({ userId, username });
+    //     })
+    //     .catch(err => console.log("something went wrong with token: ", err));
+    // }
   };
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (
-      this.state.username !== null &&
-      this.state.username !== prevState.username
-    ) {
+    const username = this.props.me && this.props.me.username;
+    if (username && (!prevProps.me || username !== prevProps.me.username)) {
       const chatManager = new ChatManager({
         instanceLocator,
-        userId: this.state.username,
+        userId: username,
         tokenProvider: new TokenProvider({
           url: tokenURL
         })
@@ -64,7 +63,7 @@ class App extends Component {
           this.currentUser = currentUser;
 
           const rooms = this.currentUser.rooms;
-          console.log(rooms);
+          // console.log(rooms);
           if (rooms.length > 1) {
             this.setState({ usersInRooms: rooms });
           }
@@ -124,33 +123,6 @@ class App extends Component {
       .catch(err => console.log("error with create room: ", err));
   };
 
-  login = ({ username, password, shouldPersist }) => {
-    console.log("!!!!", shouldPersist);
-    axios({
-      url: "/login",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      data: { username, password }
-    })
-      .then(response => {
-        console.log(
-          "response after submitting a new user: ",
-          response.config.data
-        );
-        const newUser = response.data.user;
-        console.log(response, newUser);
-
-        setToken(response.data.token, shouldPersist);
-        this.setState({
-          username: newUser.username,
-          userId: newUser._id
-        });
-      })
-      .catch(error => console.error("error", error));
-  };
-
   signUp = ({ username, password, email, shouldPersist }) => {
     console.log("should persist: ", shouldPersist);
     axios({
@@ -161,8 +133,8 @@ class App extends Component {
       },
       data: { username, password, email }
     }).then(response => {
-      console.log("response after signing up: ", response.config.data);
-      console.log("data.user: ", response.data.userRes);
+      // console.log("response after signing up: ", response.config.data);
+      // console.log("data.user: ", response.data.userRes);
       const newUser = response.data.userRes;
       console.log(response, newUser);
 
@@ -172,12 +144,17 @@ class App extends Component {
   };
 
   usernameClick = username => {
-    this.props.fetchUser();
-    Api.getUser(username).then(res => {
-      console.log("clicked screename, ", res);
-      this.setState({ clickedUser: res });
-      console.log("my clicked user state: ", this.state.clickedUser);
-    });
+    this.props.fetchUser({ username });
+
+    // const user = Api.getUser(username);
+    // console.log("this is click: ", user);
+    // this.props.fetchUser(user);
+    // Api.getUser(username).then(res => {
+    //   this.props.fetchUser(res);
+    //   console.log("clicked screename, ", res);
+    //   this.setState({ clickedUser: res });
+    //   console.log("my clicked user state: ", this.state.clickedUser);
+    // });
   };
 
   editProfile = () => {
@@ -185,19 +162,20 @@ class App extends Component {
   };
 
   render() {
+    const username = this.props.me && this.props.me.username;
     return (
       <div className="app">
         {/* <source src={soundfile} type="audio/mpeg" /> */}
 
         <Navbar
-          onLogin={this.login}
+          onLogin={this.props.login}
           onSignUp={this.signUp}
           editProfile={this.editProfile}
           valueOfEdit={this.state.editProfile}
-          currentUser={this.state.username}
+          currentUser={username}
         />
 
-        {!this.state.username ? (
+        {!username ? (
           ""
         ) : (
           <Wrapper>
@@ -220,23 +198,25 @@ class App extends Component {
           </Wrapper>
         )}
         <Profile
-          username={this.state.username}
+          username={username}
           editProfile={this.editProfile}
-          clickedUser={this.state.clickedUser}
-          userId={this.state.userId}
-          signupSubmitted={!!this.state.username}
+          //clickedUser={this.state.clickedUser}
+          userId={this.props.me && this.props.me._id}
+          signupSubmitted={!!username} //this might blow
         />
-        {this.state.username ? (
+        {username && (
           <main className="map">
-            <GoogleMap clickedUser={this.state.clickedUser} />
+            <GoogleMap
+              me={this.props.me}
+              clickedUser={this.props.profileUser}
+            />
           </main>
-        ) : (
-          ""
         )}
         <div className="vidyo">
           <Vidyo
-            username={this.state.username}
-            clickedUser={this.state.clickedUser}
+            style={{ background: "beige" }}
+            username={username}
+            clickedUser={this.props.profileUser}
           />
         </div>
       </div>
@@ -245,10 +225,17 @@ class App extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: payload => dispatch(fetchUser(payload))
+  fetchUser: payload => dispatch(fetchUser(payload)),
+  fetchMe: () => dispatch(fetchMe()),
+  login: payload => dispatch(login(payload))
 });
 
+const mapStateToProps = state => ({
+  me: state.session.me,
+  profileUser: state.users.profileUser
+});
+//mapState the mapDispatch order matters connects to the app only for this one file
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App);

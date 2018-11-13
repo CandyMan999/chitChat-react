@@ -1,0 +1,9 @@
+const store = {
+    session: {
+        me: null
+        inEdit: false
+    },
+    users: {
+        profileUser: {...}
+    }
+}

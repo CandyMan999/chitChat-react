@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
 
 import Api from "../../utils/API";
 import omit from "lodash/omit";
+import { getProfileUser } from "../../core/Users/selectors";
 
 class Profile extends Component {
   state = {
@@ -41,7 +43,8 @@ class Profile extends Component {
   render() {
     return (
       <Fragment>
-        {this.props.signupSubmitted && !this.props.clickedUser ? (
+        {console.log(this.props.inEdit, this.props.clickedUser)}
+        {this.props.inEdit ? (
           <main className="profile">
             <h3 className="profileTitle">Your Profile</h3>
 
@@ -194,8 +197,8 @@ class Profile extends Component {
           </main>
         ) : (
           ""
-        )}{" "}
-        {this.props.clickedUser ? (
+        )}
+        {this.props.clickedUser && !this.props.inEdit ? (
           <main className="profile">
             <div
               id="carouselExampleFade"
@@ -349,6 +352,15 @@ class Profile extends Component {
 
               {this.props.clickedUser.kids ? "yes" : "no"}
             </p>
+            <div style={{ textAlign: "center" }}>
+              {" "}
+              <button
+                className="block"
+                style={{ width: "200px", color: "red", textAlign: "center" }}
+              >
+                BLOCK USER
+              </button>
+            </div>
           </main>
         ) : (
           ""
@@ -358,4 +370,12 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+const mapStateToProps = state => ({
+  clickedUser: getProfileUser(state),
+  inEdit: state.session.inEdit // TODO make this a selector
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(Profile);

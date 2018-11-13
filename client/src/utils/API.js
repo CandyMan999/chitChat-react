@@ -10,6 +10,15 @@ export default {
       return res.data;
     });
   },
+  login: data =>
+    axios({
+      url: "/login",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data
+    }),
 
   getAllUsers: () =>
     axios.get("/api/users").then(res => {
@@ -21,7 +30,23 @@ export default {
       return res.data;
     }),
 
+  // fetchUser: username => {
+  //   console.log("this is happening");
+  //   axios.get(`/api/users/${username}`).then(res => {
+  //     return res.data;
+  //   });
+  // },
+
   getMe: token =>
+    axios({
+      url: "/api/me",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }),
+
+  fetchMe: token =>
     axios({
       url: "/api/me",
       method: "GET",

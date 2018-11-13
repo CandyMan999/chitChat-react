@@ -38,6 +38,7 @@ const tokenAuthenticate = (req, res, next) => {
     if (err || !decoded) return res.status(401).json(err);
 
     return db.User.findById(decoded.id)
+      .populate("pics")
       .then(user => {
         req.user = user;
         next();
@@ -119,6 +120,7 @@ router.post("/login", (req, res) => {
   db.User.findOne({
     username: req.body.username
   })
+    .populate("pics")
     .then(function(user) {
       user.comparePassword(req.body.password, (err, isMatch) => {
         if (err || !isMatch) {
@@ -132,6 +134,7 @@ router.post("/login", (req, res) => {
           { username: req.body.username },
           { $set: { isLoggedIn: true } }
         )
+
           .then(() => {
             res.json({ user, token });
           })

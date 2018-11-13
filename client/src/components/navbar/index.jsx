@@ -4,10 +4,12 @@ import { clearToken } from "../../utils/helpers";
 import Api from "../../utils/API";
 import Sound from "react-sound";
 import soundfile from "../../utils/dial.mp3";
+import { setInEdit } from "../../core/Session";
+import { connect } from "react-redux";
 
 class Navbar extends Component {
   state = {
-    username: "",
+    username: null,
     password: "",
     email: "",
     shouldPersist: false,
@@ -138,7 +140,7 @@ class Navbar extends Component {
             <button onClick={this.logOut} className="logOut">
               LogOut
             </button>{" "}
-            <h3 id="editProfile" onClick={this.props.editProfile}>
+            <h3 id="editProfile" onClick={this.props.setInEdit}>
               <img
                 style={{ height: "30px" }}
                 src={
@@ -152,7 +154,7 @@ class Navbar extends Component {
         ) : (
           ""
         )}
-        {this.state.username === "" ? (
+        {!this.props.currentUser && !this.state.username ? (
           <Sound
             url={soundfile}
             playStatus={Sound.status.PLAYING}
@@ -169,4 +171,11 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+const mapDispatchToProps = dispatch => ({
+  setInEdit: () => dispatch(setInEdit())
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Navbar);

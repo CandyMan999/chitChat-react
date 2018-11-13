@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import Api from "../../utils/API";
-import { getToken } from "../../utils/helpers";
 
 class GoogleMap extends Component {
   state = {
-    userLocation: null,
-    me: null,
+    userLocation:
+      this.props.me && this.props.me.location.lat && this.props.me.location,
     users: null,
     showingInfoWindow: false,
     activeMarker: {},
@@ -23,13 +22,13 @@ class GoogleMap extends Component {
       .catch(err => console.log(err));
   }
 
-  componentDidUpdate() {
-    const token = getToken();
-
-    if (!this.state.userLocation && token) {
-      Api.getMe(token).then(meRes => {
+  componentDidUpdate(prevProps) {
+    if (!this.state.userLocation) {
+      if (this.props.me && this.props.me.location.lat) {
+        this.setState({ userLocation: this.props.me.location });
+      } else {
         navigator.geolocation.getCurrentPosition(({ coords }) => {
-          Api.updateUser(meRes.data._id, {
+          Api.updateUser(this.props.me._id, {
             location: { lat: coords.latitude, lng: coords.longitude }
           }).then(() => {
             this.setState({
@@ -39,11 +38,8 @@ class GoogleMap extends Component {
               }
             });
           });
-          Api.getMe(token).then(newMe => {
-            this.setState({ me: newMe.data });
-          });
         });
-      });
+      }
     }
   }
 
@@ -65,7 +61,8 @@ class GoogleMap extends Component {
   };
 
   render() {
-    return this.state.userLocation && this.state.me ? (
+    console.log(this.state.userLocation);
+    return this.state.userLocation ? (
       <Map
         onClick={this.onMapClicked}
         google={this.props.google}
@@ -82,8 +79,9 @@ class GoogleMap extends Component {
           onClick={this.onMarkerClick}
           name={"Current location"}
         /> */}
-        {this.state.users.map(
-          user =>
+        {this.state.users &&
+          !!this.state.users.length &&
+          this.state.users.map(user =>
             user.pics.length >= 1 ? (
               <Marker
                 key={user._id}
@@ -100,7 +98,7 @@ class GoogleMap extends Component {
                 name={user.username}
               />
             )
-        )}
+          )}
         <InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
