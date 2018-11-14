@@ -6,6 +6,7 @@ class Vidyo extends Component {
   render() {
     return (
       <Fragment>
+        {console.log("video loaded", this.props.clickedUser)}
         {this.props.username && !this.props.clickedUser ? (
           <div>
             {" "}
@@ -60,6 +61,12 @@ class Vidyo extends Component {
         ) : (
           ""
         )}
+        {/* {this.props.clickedUser &&
+        this.props.clickedUser.blockedUsers.filter(this.props.clickedUser.username => {
+        this.props.clickedUser.username === this.props.username
+        } )
+          ? "they blocked"
+          : "not blockde"} */}
       </Fragment>
     );
   }

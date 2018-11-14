@@ -20,6 +20,15 @@ export default {
       data
     }),
 
+  blockUser: (blockingUser, blockedUser) =>
+    axios({
+      url: `/api/block/${blockingUser}/${blockedUser}`,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => console.log(res)),
+
   getAllUsers: () =>
     axios.get("/api/users").then(res => {
       return res.data;

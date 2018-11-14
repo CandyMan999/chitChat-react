@@ -3,9 +3,13 @@ export const FETCH_USER = "USERS/FETCH_USER";
 
 export const FETCH_PROFILE_USER = "USERS/FETCH_PROFILE_USER";
 export const SET_PROFILE_USER = "USERS/SET_PROFILE_USER";
+export const SET_BLOCKED_USER = "USERS/SET_BLOCKED_USER";
+export const BLOCK_USER = "USERS/BLOCK_USER";
 
 //reducer  function that mutates state
-const initialState = {};
+const initialState = {
+  blockedUsers: []
+};
 export default function reducer(state = initialState, action = {}) {
   const { type, payload } = action;
   console.log(type);
@@ -15,7 +19,11 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         profileUser: payload
       };
-
+    case SET_BLOCKED_USER:
+      return {
+        ...state,
+        blockedUsers: [...state.blockedUsers, payload]
+      };
     default:
       return state;
   }
@@ -31,7 +39,16 @@ export const fetchUser = payload =>
 // export const fetchProfileUser = payload => ({
 //   type: FETCH_PROFILE_USER,
 //   payload
-// });
+// })
+export const blockUser = payload => ({
+  type: BLOCK_USER,
+  payload
+});
+
+export const setBlockedUser = payload => ({
+  type: SET_BLOCKED_USER,
+  payload
+});
 
 export const setProfileUser = payload => ({
   type: SET_PROFILE_USER,

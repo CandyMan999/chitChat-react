@@ -76,7 +76,13 @@ const UserSchema = new mongoose.Schema({
       type: Number,
       default: null
     }
-  }
+  },
+  blockedUsers: [
+    {
+      type: String,
+      default: null
+    }
+  ]
 });
 
 UserSchema.pre("save", function(next) {

@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import Api from "../../utils/API";
 import omit from "lodash/omit";
 import { getProfileUser } from "../../core/Users/selectors";
-
+import { fetchMe } from "../../core/Session";
+import { fetchUser } from "../../core/Users";
 class Profile extends Component {
   state = {
     intro: "",
@@ -34,10 +35,18 @@ class Profile extends Component {
     alert("your profile has been updated");
     const id = this.props.userId;
     Api.updateUser(id, omit(this.state, ["accepted", "rejected"]));
+    window.location.reload();
+    // this.props.fetchUser(this.props.me.username)// TODO set in edit to false here somehow
   };
 
   handleImageSubmit = e => {
     e.preventDefault();
+  };
+
+  blockUserClick = () => {
+    const blockedUser = this.props.clickedUser.username;
+    const blockingUser = this.props.me.username;
+    Api.blockUser(blockingUser, blockedUser);
   };
 
   render() {
@@ -355,6 +364,7 @@ class Profile extends Component {
             <div style={{ textAlign: "center" }}>
               {" "}
               <button
+                onClick={this.blockUserClick}
                 className="block"
                 style={{ width: "200px", color: "red", textAlign: "center" }}
               >
@@ -369,6 +379,10 @@ class Profile extends Component {
     );
   }
 }
+const mapDispatchToProps = dispatch => ({
+  fetchMe: () => dispatch(fetchMe()),
+  fetchUser: payload => dispatch(fetchUser(payload))
+});
 
 const mapStateToProps = state => ({
   clickedUser: getProfileUser(state),
@@ -377,5 +391,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(Profile);

@@ -18,8 +18,7 @@ import { setToken, getToken } from "./utils/helpers";
 
 import { connect } from "react-redux";
 import { fetchMe, login } from "./core/Session";
-import { fetchUser } from "./core/Users";
-import API from "./utils/API";
+import { fetchUser, blockUser } from "./core/Users";
 
 class App extends Component {
   state = {
@@ -33,21 +32,18 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    //const token = getToken();
-
     this.props.fetchMe();
-
-    // if (token) {
-    //   Api.getMe(token)
-    //     .then(({ data: { _id: userId, username } }) => {
-    //       this.setState({ userId, username });
-    //     })
-    //     .catch(err => console.log("something went wrong with token: ", err));
-    // }
   };
 
   componentDidUpdate = (prevProps, prevState) => {
     const username = this.props.me && this.props.me.username;
+    // if (username) {
+    //   setTimeout(() => {
+    //     Api.logOut(username);
+    //     window.location.reload();
+    //   }, 1800000);
+    // }
+
     if (username && (!prevProps.me || username !== prevProps.me.username)) {
       const chatManager = new ChatManager({
         instanceLocator,
@@ -133,13 +129,9 @@ class App extends Component {
       },
       data: { username, password, email }
     }).then(response => {
-      // console.log("response after signing up: ", response.config.data);
-      // console.log("data.user: ", response.data.userRes);
-      const newUser = response.data.userRes;
-      console.log(response, newUser);
-
       setToken(response.data.token, shouldPersist);
-      this.setState({ userId: newUser._id, username: newUser.username });
+      this.props.fetchMe();
+      //this.setState({ userId: newUser._id, username: newUser.username });
     });
   };
 
@@ -198,6 +190,8 @@ class App extends Component {
           </Wrapper>
         )}
         <Profile
+          me={this.props.me}
+          blockUser={this.props.blockUser}
           username={username}
           editProfile={this.editProfile}
           //clickedUser={this.state.clickedUser}
@@ -227,12 +221,14 @@ class App extends Component {
 const mapDispatchToProps = dispatch => ({
   fetchUser: payload => dispatch(fetchUser(payload)),
   fetchMe: () => dispatch(fetchMe()),
-  login: payload => dispatch(login(payload))
+  login: payload => dispatch(login(payload)),
+  blockUser: payload => dispatch(blockUser(payload))
 });
 
 const mapStateToProps = state => ({
   me: state.session.me,
-  profileUser: state.users.profileUser
+  profileUser: state.users.profileUser,
+  blockedUsers: state.users.blockedUsers
 });
 //mapState the mapDispatch order matters connects to the app only for this one file
 export default connect(

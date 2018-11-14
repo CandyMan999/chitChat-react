@@ -176,10 +176,20 @@ router.get("/api/users", (req, res) => {
 });
 
 router.put("/api/logout/:username", (req, res) => {
-  console.log("###########", req.params.username);
   db.User.findOneAndUpdate(
     { username: req.params.username },
     { $set: { isLoggedIn: false } }
+  )
+    .then(user => res.json(user))
+    .catch(err => console.log(err));
+});
+
+router.put("/api/block/:blockingUser/:blockedUser", (req, res) => {
+  console.log("###########", req.params.blockingUser, req.params.blockedUser);
+  db.User.findOneAndUpdate(
+    { username: req.params.blockingUser },
+    { $push: { blockedUsers: req.params.blockedUser } },
+    { new: true }
   )
     .then(user => res.json(user))
     .catch(err => console.log(err));
