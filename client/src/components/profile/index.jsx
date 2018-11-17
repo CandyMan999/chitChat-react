@@ -21,6 +21,10 @@ class Profile extends Component {
     rejected: []
   };
 
+  componentDidUpdate() {
+    this.determineIsBlocked();
+  }
+
   handleChange = (e, name) => {
     this.setState({ [name]: e.target.value });
   };
@@ -47,9 +51,35 @@ class Profile extends Component {
     const blockedUser = this.props.clickedUser.username;
     const blockingUser = this.props.me.username;
     Api.blockUser(blockingUser, blockedUser);
+    alert(`${blockedUser} has been Blocked!`);
+  };
+
+  unblockUser = () => {
+    const blockedUser = this.props.clickedUser.username;
+    const blockingUser = this.props.me.username;
+    Api.unBlockUser(blockingUser, blockedUser);
+    alert(`${blockedUser} has been Blocked!`);
+  };
+
+  determineIsBlocked = () => {
+    if (this.props.clickedUser) {
+      return this.props.me.blockedUsers.some(
+        users => users === this.props.clickedUser.username
+      );
+    } else {
+      return false;
+    }
   };
 
   render() {
+    const isBlocked = this.determineIsBlocked();
+    console.log("!!!!", isBlocked);
+    const showIsBlocked =
+      this.props.me &&
+      this.props.me.username &&
+      this.props.clickedUser &&
+      this.props.clickedUser.username !== this.props.me.username;
+
     return (
       <Fragment>
         {console.log(this.props.inEdit, this.props.clickedUser)}
@@ -361,16 +391,25 @@ class Profile extends Component {
 
               {this.props.clickedUser.kids ? "yes" : "no"}
             </p>
-            <div style={{ textAlign: "center" }}>
-              {" "}
-              <button
-                onClick={this.blockUserClick}
-                className="block"
-                style={{ width: "200px", color: "red", textAlign: "center" }}
-              >
-                BLOCK USER
-              </button>
-            </div>
+            {showIsBlocked ? (
+              isBlocked ? (
+                <div style={{ textAlign: "center" }}>
+                  {" "}
+                  <button onClick={this.unblockUser} className="block">
+                    UNBLOCK USER
+                  </button>
+                </div>
+              ) : (
+                <div style={{ textAlign: "center" }}>
+                  {" "}
+                  <button onClick={this.blockUserClick} className="block">
+                    BLOCK USER
+                  </button>
+                </div>
+              )
+            ) : (
+              ""
+            )}
           </main>
         ) : (
           ""

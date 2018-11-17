@@ -250,3 +250,14 @@ button:hover {
   text-align: center;
   margin-top: 20%;
 }
+
+.block {
+  width: 200px;
+  color: red;
+  text-align: center;
+}
+
+.block:hover {
+  border: solid 2px gold;
+  text-shadow: 2px 2px white;
+}

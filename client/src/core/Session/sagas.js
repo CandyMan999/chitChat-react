@@ -38,11 +38,6 @@ function* login({ payload: { username, shouldPersist, password } }) {
   } catch (error) {
     console.error("error", error);
   }
-  // Api.login()
-  //   .then(response => {
-  //     setToken(response.data.token, shouldPersist);
-  //   })
-  //   .catch(error => console.error("error", error));
 }
 
 ///this is boiler plate needed for each ruducer folder..... several sagas for each reducer

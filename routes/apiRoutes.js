@@ -197,4 +197,16 @@ router.put("/api/block/:blockingUser/:blockedUser", (req, res) => {
     .catch(err => console.log(err));
 });
 
+router.put("/api/unblock/:blockingUser/:blockedUser", (req, res) => {
+  db.User.findOneAndUpdate(
+    { username: req.params.blockingUser },
+    {
+      $unset: { blockedUsers: req.params.blockedUser }
+    },
+    { new: true }
+  )
+    .then(user => res.json(user))
+    .catch(err => console.log(err));
+});
+
 module.exports = router;

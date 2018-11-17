@@ -29,6 +29,15 @@ export default {
       }
     }).then(res => console.log(res)),
 
+  unBlockUser: (blockingUser, blockedUser) =>
+    axios({
+      url: `/api/unblock/${blockingUser}/${blockedUser}`,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => console.log(res)),
+
   getAllUsers: () =>
     axios.get("/api/users").then(res => {
       return res.data;
