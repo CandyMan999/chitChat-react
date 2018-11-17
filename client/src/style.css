@@ -238,9 +238,15 @@ button:hover {
   text-align: center;
   color: gold;
   background: #6d7d78;
+  margin-bottom: 0;
 }
 
 .selections {
   display: inline-block;
   margin: 10px;
+}
+.blocked {
+  color: red;
+  text-align: center;
+  margin-top: 20%;
 }

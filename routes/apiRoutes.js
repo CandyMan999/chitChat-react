@@ -132,7 +132,8 @@ router.post("/login", (req, res) => {
 
         db.User.findOneAndUpdate(
           { username: req.body.username },
-          { $set: { isLoggedIn: true } }
+          { $set: { isLoggedIn: true } },
+          { new: true }
         )
 
           .then(() => {
@@ -178,7 +179,8 @@ router.get("/api/users", (req, res) => {
 router.put("/api/logout/:username", (req, res) => {
   db.User.findOneAndUpdate(
     { username: req.params.username },
-    { $set: { isLoggedIn: false } }
+    { $set: { isLoggedIn: false } },
+    { new: true }
   )
     .then(user => res.json(user))
     .catch(err => console.log(err));
