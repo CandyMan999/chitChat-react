@@ -7,10 +7,12 @@ export const CLEAR_ME = "SESSION/CLEAR_ME";
 
 export const SET_IN_EDIT = "SESSION/SET_IN_EDIT";
 export const REMOVE_IN_EDIT = "SESSION/REMOVE_IN_EDIT";
+export const SET_ERROR = "SESSION/SET_ERROR";
 //initial state
 const initialState = {
   me: null,
-  inEdit: false
+  inEdit: false,
+  error: null
 };
 
 //reducer
@@ -36,6 +38,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         inEdit: false
+      };
+    case SET_ERROR:
+      return {
+        ...state,
+        error: payload
       };
     default:
       return state;
@@ -74,4 +81,9 @@ export const setInEdit = () => ({
 
 export const removeInEdit = () => ({
   type: REMOVE_IN_EDIT
+});
+
+export const setError = payload => ({
+  type: SET_ERROR,
+  payload
 });

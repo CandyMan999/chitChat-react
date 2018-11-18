@@ -1,6 +1,7 @@
 import { takeLatest, call, put } from "redux-saga/effects";
 
 import {
+  setError,
   FETCH_ME,
   setMe,
   LOGIN,
@@ -27,6 +28,7 @@ function* fetchMe() {
     }
   }
 }
+
 function* login({ payload: { username, shouldPersist, password } }) {
   try {
     const response = yield call(Api.login, { username, password });
@@ -35,8 +37,10 @@ function* login({ payload: { username, shouldPersist, password } }) {
       yield put(setMe(response.data.user));
       yield put(setProfileUser(response.data.user));
     }
+    console.log("anything");
   } catch (error) {
     console.error("error", error);
+    yield put(setError("Invalid Username or Password"));
   }
 }
 

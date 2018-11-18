@@ -1,7 +1,8 @@
 const store = {
     session: {
         me: null
-        inEdit: false
+        inEdit: false,
+        error: "message"
     },
     users: {
         profileUser: {...}

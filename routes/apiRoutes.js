@@ -2,7 +2,7 @@ const db = require("../models");
 const axios = require("axios");
 const express = require("express");
 const router = express.Router();
-const Chatkit = require("pusher-chatkit-server");
+const Chatkit = require("@pusher/chatkit-server");
 const jwt = require("jsonwebtoken");
 const SECRET = "shhhh";
 const multer = require("multer");
@@ -46,6 +46,28 @@ const tokenAuthenticate = (req, res, next) => {
       .catch(err => res.status(401).json(err));
   });
 };
+
+// router.post("api/deleteroom/:room", (req, res) => {
+//   setTimeout(() => {
+//     chatkit
+//       .deleteRoom({
+//         id: req.params.room
+//       })
+//       .then(() => console.log("gone forever"))
+//       .catch(err => console.error(err));
+//   }, 60000);
+// });
+
+// chatkit.deleteMessage({
+//   id: messageToDelete.id
+// })
+//   .then(() => console.log('gone forever'))
+//   .catch(err => console.error(err))
+
+// chatkit
+//   .getRooms({})
+//   .then(rooms => console.log("got rooms", rooms))
+//   .catch(err => console.error(err));
 
 router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
   console.log("!!!!!!!!!", req.file);
@@ -124,7 +146,7 @@ router.post("/login", (req, res) => {
     .then(function(user) {
       user.comparePassword(req.body.password, (err, isMatch) => {
         if (err || !isMatch) {
-          return res.status(401);
+          return res.status(401).json(err);
         }
         const token = jwt.sign({ id: user._id }, SECRET, {
           expiresIn: "14 days"
@@ -142,7 +164,7 @@ router.post("/login", (req, res) => {
           .catch(err => res.json(err));
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(401).json(err));
 });
 
 router.put("/api/users/:id", tokenAuthenticate, (req, res) => {

@@ -28,7 +28,8 @@ class App extends Component {
     joinedRooms: [],
     usersInRooms: null,
     clickedUser: null,
-    editProfile: false
+    editProfile: false,
+    prevRoomId: null
   };
 
   componentDidMount = () => {
@@ -60,9 +61,9 @@ class App extends Component {
 
           const rooms = this.currentUser.rooms;
           // console.log(rooms);
-          if (rooms.length > 1) {
-            this.setState({ usersInRooms: rooms });
-          }
+
+          this.setState({ usersInRooms: rooms });
+          console.log("####", rooms);
           this.getRooms();
         })
         .catch(err => console.log("error on connecting: ", err));
@@ -71,6 +72,7 @@ class App extends Component {
 
   getRooms = () => {
     this.currentUser
+
       .getJoinableRooms()
       .then(joinableRooms => {
         this.setState({
@@ -82,6 +84,25 @@ class App extends Component {
   };
 
   subscribeToRoom = roomId => {
+    if (this.state.prevRoomId) {
+      this.currentUser
+        .leaveRoom({ roomId: this.state.prevRoomId })
+        .then(room => {
+          console.log(`Left room with ID: ${room.id}`);
+        })
+        .catch(err => {
+          console.log(`Error leaving room ${this.state.prevRoomId}: ${err}`);
+        });
+    }
+    this.currentUser
+      .joinRoom({ roomId: roomId })
+      .then(room => {
+        console.log(`Joined room with ID: ${room.id}`);
+      })
+      .catch(err => {
+        console.log(`Error joining room ${roomId}: ${err}`);
+      });
+    this.setState({ prevRoomId: roomId });
     this.setState({ messages: [] });
     this.currentUser
       .subscribeToRoom({

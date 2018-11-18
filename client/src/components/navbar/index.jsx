@@ -75,6 +75,7 @@ class Navbar extends Component {
               value={this.state.username}
               onChange={e => this.handleChange(e, "username")}
             />
+            {this.props.error && <p>{this.props.error}</p>}
             <input
               type="password"
               placeholder="Password"
@@ -175,7 +176,11 @@ const mapDispatchToProps = dispatch => ({
   setInEdit: () => dispatch(setInEdit())
 });
 
+const mapStateToProps = state => ({
+  error: state.session.error
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Navbar);

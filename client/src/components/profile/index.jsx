@@ -58,7 +58,7 @@ class Profile extends Component {
     const blockedUser = this.props.clickedUser.username;
     const blockingUser = this.props.me.username;
     Api.unBlockUser(blockingUser, blockedUser);
-    alert(`${blockedUser} has been Blocked!`);
+    alert(`${blockedUser} has been UNBlOCKED!`);
   };
 
   determineIsBlocked = () => {
