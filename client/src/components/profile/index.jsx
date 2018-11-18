@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Api from "../../utils/API";
 import omit from "lodash/omit";
 import { getProfileUser } from "../../core/Users/selectors";
-import { fetchMe } from "../../core/Session";
+import { fetchMe, blockUser, unBlockUser } from "../../core/Session";
 import { fetchUser } from "../../core/Users";
 class Profile extends Component {
   state = {
@@ -50,14 +50,18 @@ class Profile extends Component {
   blockUserClick = () => {
     const blockedUser = this.props.clickedUser.username;
     const blockingUser = this.props.me.username;
-    Api.blockUser(blockingUser, blockedUser);
+    Api.blockUser(blockingUser, blockedUser).then(() =>
+      this.props.blockUser(blockedUser)
+    );
     alert(`${blockedUser} has been Blocked!`);
   };
 
   unblockUser = () => {
     const blockedUser = this.props.clickedUser.username;
     const blockingUser = this.props.me.username;
-    Api.unBlockUser(blockingUser, blockedUser);
+    Api.unBlockUser(blockingUser, blockedUser).then(() => {
+      this.props.unblockUser(blockedUser);
+    });
     alert(`${blockedUser} has been UNBlOCKED!`);
   };
 
@@ -420,7 +424,9 @@ class Profile extends Component {
 }
 const mapDispatchToProps = dispatch => ({
   fetchMe: () => dispatch(fetchMe()),
-  fetchUser: payload => dispatch(fetchUser(payload))
+  fetchUser: payload => dispatch(fetchUser(payload)),
+  blockUser: payload => dispatch(blockUser(payload)),
+  unblockUser: payload => dispatch(unBlockUser(payload))
 });
 
 const mapStateToProps = state => ({

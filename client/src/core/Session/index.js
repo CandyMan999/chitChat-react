@@ -8,6 +8,9 @@ export const CLEAR_ME = "SESSION/CLEAR_ME";
 export const SET_IN_EDIT = "SESSION/SET_IN_EDIT";
 export const REMOVE_IN_EDIT = "SESSION/REMOVE_IN_EDIT";
 export const SET_ERROR = "SESSION/SET_ERROR";
+export const BLOCK_USER = "SESSION/BLOCK_USER";
+export const UNBLOCK_USER = "SESSION/UNBLOCK_USER";
+
 //initial state
 const initialState = {
   me: null,
@@ -43,6 +46,21 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         error: payload
+      };
+    case BLOCK_USER:
+      return {
+        ...state,
+        me: { ...state.me, blockedUsers: [...state.me.blockedUsers, payload] }
+      };
+    case UNBLOCK_USER:
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          blockedUsers: state.me.blockedUsers.filter(
+            username => username !== payload
+          )
+        }
       };
     default:
       return state;
@@ -85,5 +103,15 @@ export const removeInEdit = () => ({
 
 export const setError = payload => ({
   type: SET_ERROR,
+  payload
+});
+
+export const blockUser = payload => ({
+  type: BLOCK_USER,
+  payload
+});
+
+export const unBlockUser = payload => ({
+  type: UNBLOCK_USER,
   payload
 });
