@@ -69,9 +69,22 @@ const tokenAuthenticate = (req, res, next) => {
 //   .then(rooms => console.log("got rooms", rooms))
 //   .catch(err => console.error(err));
 
+router.delete("/api/users/:id/images/:photo_id", (req, res) => {
+  console.log("$$$", req.params.id, req.params.photo_id);
+  db.User.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      $pull: { pics: req.params.photo_id }
+    },
+    { new: true }
+  )
+    .then(user => res.json(user))
+    .catch(err => console.log(err));
+});
+
 router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
   console.log("!!!!!!!!!", req.file);
-
+  console.log("?????", req.body);
   const image = {
     pics: { url: req.file.url }
   };
@@ -92,7 +105,11 @@ router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
       )
         .then(function(dbImage) {
           console.log("i found something: ", dbImage);
-          res.redirect("/");
+          res.json({
+            data: {
+              imageId: dbImage.pics.slice(-1)
+            }
+          });
         })
         .catch(function(err) {
           res.json(err);
@@ -223,7 +240,7 @@ router.put("/api/unblock/:blockingUser/:blockedUser", (req, res) => {
   db.User.findOneAndUpdate(
     { username: req.params.blockingUser },
     {
-      $unset: { blockedUsers: req.params.blockedUser }
+      $pull: { blockedUsers: req.params.blockedUser }
     },
     { new: true }
   )

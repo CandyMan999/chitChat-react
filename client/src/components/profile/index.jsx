@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-
+import PhotoUploader from "./photo-uploader";
 import Api from "../../utils/API";
 import omit from "lodash/omit";
 import { getProfileUser } from "../../core/Users/selectors";
@@ -20,10 +20,6 @@ class Profile extends Component {
     accepted: [],
     rejected: []
   };
-
-  componentDidUpdate() {
-    this.determineIsBlocked();
-  }
 
   handleChange = (e, name) => {
     this.setState({ [name]: e.target.value });
@@ -90,8 +86,8 @@ class Profile extends Component {
         {this.props.inEdit ? (
           <main className="profile">
             <h3 className="profileTitle">Your Profile</h3>
-
-            <form
+            <PhotoUploader id={this.props.userId} />
+            {/* <form
               action={`/api/users/${this.props.userId}/image`}
               method="post"
               encType="multipart/form-data"
@@ -101,7 +97,7 @@ class Profile extends Component {
               <input type="submit" value="Submit Photo" />
               Please submit all photos before saving your profile!!!
               <hr />
-            </form>
+            </form> */}
             <form>
               <textarea
                 rows="4"

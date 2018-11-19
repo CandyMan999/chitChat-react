@@ -10,6 +10,7 @@ export const REMOVE_IN_EDIT = "SESSION/REMOVE_IN_EDIT";
 export const SET_ERROR = "SESSION/SET_ERROR";
 export const BLOCK_USER = "SESSION/BLOCK_USER";
 export const UNBLOCK_USER = "SESSION/UNBLOCK_USER";
+export const SIGNUP = "SESSION/SIGNUP";
 
 //initial state
 const initialState = {
@@ -89,6 +90,10 @@ export const login = payload => ({
   payload
 });
 
+export const signUp = payload => ({
+  type: SIGNUP,
+  payload
+});
 // export const logout = () => ({
 //   type: LOGOUT
 // });

@@ -6,6 +6,7 @@ import {
   setMe,
   LOGIN,
   LOGOUT,
+  SIGNUP,
   clearMe,
   fetchMe as fetchMeAction
 } from "./index";
@@ -44,10 +45,24 @@ function* login({ payload: { username, shouldPersist, password } }) {
   }
 }
 
+function* signUp({ payload: { username, email, password, shouldPersist } }) {
+  try {
+    const response = yield call(Api.signUp, { username, email, password });
+    if (response) {
+      setToken(response.data.token, shouldPersist);
+      yield put(setMe(response.data.userRes));
+      yield put(setProfileUser(response.data.userRes));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 ///this is boiler plate needed for each ruducer folder..... several sagas for each reducer
 export const sessionSagas = [
   takeLatest(FETCH_ME, fetchMe),
-  takeLatest(LOGIN, login)
+  takeLatest(LOGIN, login),
+  takeLatest(SIGNUP, signUp)
 
   // takeLatest(LOGIN, login),
   // takeLatest(LOGOUT, logout)

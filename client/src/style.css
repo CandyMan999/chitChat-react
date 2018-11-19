@@ -261,3 +261,19 @@ button:hover {
   border: solid 2px gold;
   text-shadow: 2px 2px white;
 }
+
+.photo-uploader {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  border-width: 2px;
+  border-color: rgb(102, 102, 102);
+  border-style: dashed;
+  border-radius: 5px;
+}
+
+.deleteIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

@@ -2,6 +2,23 @@ import axios from "axios";
 import { getToken } from "./helpers";
 
 export default {
+  uploadPhoto: (file, id) => {
+    const data = new FormData();
+    data.append("image", file);
+    return axios({
+      url: `/api/users/${id}/image`,
+      method: "POST",
+      headers: {
+        "content-type": "multipart/form-data"
+      },
+      data
+    });
+  },
+  deletePhoto: (id, photoId) =>
+    axios({
+      url: `/api/users/${id}/images/${photoId}`,
+      method: "DELETE"
+    }),
   // deletRoom: () =>
   //   axios({
   //     url: ` https://us1.pusherplatform.io/services/chatkit/v2/a55d6d92-ceb4-4e02-a75e-b47722122dcb/rooms/:21234234/1e28b3ff-92aa-4df1-a5db-2a113523ad2f:erUgKYEhx/4tA5mf8KZxL6ey+f7Qu/lKPael4YBx5Ts=`,
@@ -24,6 +41,16 @@ export default {
   login: data =>
     axios({
       url: "/login",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data
+    }),
+
+  signUp: data =>
+    axios({
+      url: "/api/users",
       method: "POST",
       headers: {
         "Content-Type": "application/json"

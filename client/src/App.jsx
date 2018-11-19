@@ -17,7 +17,7 @@ import { tokenURL, instanceLocator } from "./config";
 import { setToken, getToken } from "./utils/helpers";
 
 import { connect } from "react-redux";
-import { fetchMe, login } from "./core/Session";
+import { fetchMe, login, signUp } from "./core/Session";
 import { fetchUser, blockUser } from "./core/Users";
 
 class App extends Component {
@@ -140,22 +140,6 @@ class App extends Component {
       .catch(err => console.log("error with create room: ", err));
   };
 
-  signUp = ({ username, password, email, shouldPersist }) => {
-    console.log("should persist: ", shouldPersist);
-    axios({
-      url: "/api/users",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      data: { username, password, email }
-    }).then(response => {
-      setToken(response.data.token, shouldPersist);
-      this.props.fetchMe();
-      //this.setState({ userId: newUser._id, username: newUser.username });
-    });
-  };
-
   usernameClick = username => {
     this.props.fetchUser({ username });
 
@@ -182,7 +166,7 @@ class App extends Component {
 
         <Navbar
           onLogin={this.props.login}
-          onSignUp={this.signUp}
+          onSignUp={this.props.signUp}
           editProfile={this.editProfile}
           valueOfEdit={this.state.editProfile}
           currentUser={username}
@@ -243,7 +227,8 @@ const mapDispatchToProps = dispatch => ({
   fetchUser: payload => dispatch(fetchUser(payload)),
   fetchMe: () => dispatch(fetchMe()),
   login: payload => dispatch(login(payload)),
-  blockUser: payload => dispatch(blockUser(payload))
+  blockUser: payload => dispatch(blockUser(payload)),
+  signUp: payload => dispatch(signUp(payload))
 });
 
 const mapStateToProps = state => ({
