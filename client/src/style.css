@@ -277,3 +277,12 @@ button:hover {
   top: 0;
   right: 0;
 }
+.photo-uploader:hover {
+  cursor: pointer;
+}
+
+.deleteIcon:hover {
+  color: mediumaquamarine;
+  cursor: pointer;
+  border: solid 2px gold;
+}

@@ -29,7 +29,12 @@ class PhotoUploader extends Component {
     });
   };
 
-  handleDelete = image => {
+  clickHandler(e) {
+    e.stopPropagation();
+  }
+
+  handleDelete = (e, image) => {
+    this.clickHandler(e);
     Api.deletePhoto(this.props.id, image.id).then(() => {
       this.setState({
         images: this.state.images.filter(cImage => cImage.id !== image.id)
@@ -47,6 +52,21 @@ class PhotoUploader extends Component {
           onDropRejected={console.log("duh")}
           className="photo-uploader"
         >
+          {this.state.images.length >= 1 ? (
+            ""
+          ) : (
+            <div style={{ textAlign: "center" }}>
+              <p>
+                Click here to upload photos or drag and drop. (JPEG or PNG only){" "}
+              </p>{" "}
+              <img
+                src="https://cdn2.iconfinder.com/data/icons/pictograms-4/512/43-512.png"
+                width={100}
+                height={100}
+                alt="fuck off"
+              />
+            </div>
+          )}
           <div style={{ width: "300px", display: "flex", flexWrap: "wrap" }}>
             {this.state.images.map(image => (
               <div style={{ position: "relative" }}>
@@ -59,8 +79,7 @@ class PhotoUploader extends Component {
 
                 <button
                   className="deleteIcon"
-                  //onClick={() => this.handleDelete(this.props.me.pics[i]._id)}
-                  onClick={() => this.handleDelete(image)}
+                  onClick={e => this.handleDelete(e, image)}
                 >
                   x
                 </button>
