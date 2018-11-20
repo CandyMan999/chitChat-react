@@ -53,7 +53,7 @@ router.delete("/api/rooms/:id", (req, res) => {
     .deleteRoom({
       id: req.params.id
     })
-    .then(() => console.log("gone forever") || res.json({ result: "success" }))
+    .then(() => res.json({ result: "success" }))
     .catch(err => console.error(err) || res.sendStatus(401));
 });
 
