@@ -82,7 +82,6 @@ class Profile extends Component {
 
     return (
       <Fragment>
-        {console.log(this.props.inEdit, this.props.clickedUser)}
         {this.props.inEdit ? (
           <main className="profile">
             <h3 className="profileTitle">Your Profile</h3>

@@ -19,6 +19,11 @@ export default {
       url: `/api/users/${id}/images/${photoId}`,
       method: "DELETE"
     }),
+  deleteRoom: roomId =>
+    axios({
+      url: `/api/rooms/${roomId}`,
+      method: "DELETE"
+    }),
   // deletRoom: () =>
   //   axios({
   //     url: ` https://us1.pusherplatform.io/services/chatkit/v2/a55d6d92-ceb4-4e02-a75e-b47722122dcb/rooms/:21234234/1e28b3ff-92aa-4df1-a5db-2a113523ad2f:erUgKYEhx/4tA5mf8KZxL6ey+f7Qu/lKPael4YBx5Ts=`,
@@ -31,7 +36,11 @@ export default {
   //     .catch(res => console.log(res)),
 
   creatUser: data => axios.post("/api/users", data),
-
+  authenticate: username =>
+    axios({
+      url: `/authenticate?userId=${username}`,
+      method: "POST"
+    }),
   logOut: username => {
     console.log("username logout: ", username);
     axios.put(`/api/logout/${username}`).then(res => {

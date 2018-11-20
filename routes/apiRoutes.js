@@ -47,16 +47,15 @@ const tokenAuthenticate = (req, res, next) => {
   });
 };
 
-// router.post("api/deleteroom/:room", (req, res) => {
-//   setTimeout(() => {
-//     chatkit
-//       .deleteRoom({
-//         id: req.params.room
-//       })
-//       .then(() => console.log("gone forever"))
-//       .catch(err => console.error(err));
-//   }, 60000);
-// });
+router.delete("/api/rooms/:id", (req, res) => {
+  console.log("wat");
+  chatkit
+    .deleteRoom({
+      id: req.params.id
+    })
+    .then(() => console.log("gone forever") || res.json({ result: "success" }))
+    .catch(err => console.error(err) || res.sendStatus(401));
+});
 
 // chatkit.deleteMessage({
 //   id: messageToDelete.id
@@ -246,6 +245,12 @@ router.put("/api/unblock/:blockingUser/:blockedUser", (req, res) => {
   )
     .then(user => res.json(user))
     .catch(err => console.log(err));
+});
+
+//TODO run authentication middleware on this
+router.post("/authenticate", (req, res) => {
+  const authData = chatkit.authenticate({ userId: req.query.user_id });
+  res.status(authData.status).send(authData.body);
 });
 
 module.exports = router;

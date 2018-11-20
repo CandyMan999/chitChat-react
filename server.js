@@ -18,13 +18,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-// post route for our photo
-
-app.post("/authenticate", (req, res) => {
-  const authData = chatkit.authenticate({ userId: req.query.user_id });
-  res.status(authData.status).send(authData.body);
-});
-
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/chitchat");
 
