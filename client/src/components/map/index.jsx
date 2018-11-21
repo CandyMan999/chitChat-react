@@ -9,7 +9,8 @@ class GoogleMap extends Component {
     users: null,
     showingInfoWindow: false,
     activeMarker: {},
-    selectedUser: {}
+    selectedUser: {} || this.props.clickedUser,
+    clickedUser: this.props.clickedUser && this.props.clickedUser.username
   };
 
   // TODO need to pass user object down to here or at least userLocation
@@ -61,7 +62,6 @@ class GoogleMap extends Component {
   };
 
   render() {
-    console.log(this.state.userLocation);
     return this.state.userLocation ? (
       <Map
         onClick={this.onMapClicked}
@@ -89,6 +89,12 @@ class GoogleMap extends Component {
                 onClick={this.onMarkerClick}
                 name={user.username}
                 image={user.pics[0].pics.url}
+                animation={
+                  this.state.selectedUser.username ===
+                  this.state.clickedUser.username
+                    ? this.props.google.maps.Animation.BOUNCE
+                    : ""
+                }
               />
             ) : (
               <Marker

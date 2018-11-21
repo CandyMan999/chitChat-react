@@ -9,12 +9,12 @@ import GoogleMap from "./components/map";
 import "./style.css";
 import Navbar from "./components/navbar";
 import Wrapper from "./components/wrapper";
-import axios from "axios";
+
 import Api from "./utils/API";
 import Vidyo from "./components/vidyo";
+import { clearToken } from "./utils/helpers";
 
 import { tokenURL, instanceLocator } from "./config";
-import { setToken, getToken } from "./utils/helpers";
 
 import { connect } from "react-redux";
 import { fetchMe, login, signUp } from "./core/Session";
@@ -38,32 +38,33 @@ class App extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     const username = this.props.me && this.props.me.username;
-    // if (username) {
-    //   setTimeout(() => {
-    //     Api.logOut(username);
-    //     window.location.reload();
-    //   }, 1800000);
-    // }
 
     if (username && (!prevProps.me || username !== prevProps.me.username)) {
       const chatManager = new ChatManager({
         instanceLocator,
         userId: username,
         tokenProvider: new TokenProvider({
-          url: tokenURL
+          url: tokenURL,
+          queryParams: { userId: username }
         })
       });
 
       chatManager
-        .connect()
+        .connect({
+          onAddedToRoom: room => {
+            console.log(`Added to room ${room.name}`);
+          },
+          onRemovedFromRoom: room => {
+            console.log("user left room", room);
+          }
+        })
         .then(currentUser => {
           this.currentUser = currentUser;
 
           const rooms = this.currentUser.rooms;
-          // console.log(rooms);
 
           this.setState({ usersInRooms: rooms });
-          console.log("####", rooms);
+          
           this.getRooms();
         })
         .catch(err => console.log("error on connecting: ", err));
@@ -85,14 +86,47 @@ class App extends Component {
 
   subscribeToRoom = roomId => {
     if (this.state.prevRoomId) {
+      const username = this.props.me && this.props.me.username;
       this.currentUser
-        .leaveRoom({ roomId: this.state.prevRoomId })
-        .then(room => {
-          console.log(`Left room with ID: ${room.id}`);
+        .removeUserFromRoom({
+          userId: username,
+          roomId: this.state.prevRoomId
+        })
+        .then(() => {
+          const allRooms = [
+            ...this.state.joinableRooms,
+            ...this.state.joinedRooms
+          ];
+          
+          allRooms.forEach(room => {
+            if (room.userIds.length === 0 && room.name !== "Dallas") {
+              Api.deleteRoom(room.id).then(res => {
+                console.log("we have a deleted a room", res);
+                this.getRooms();
+
+              
+                this.setState({
+                  joinedRooms: this.state.joinedRooms.filter(
+                    room => room.id !== this.state.prevRoomId
+                  ),
+                  joinableRooms: this.state.joinableRooms.filter(
+                    room => room.id !== this.state.prevRoomId
+                  )
+                });
+              });
+            }
+          });
         })
         .catch(err => {
-          console.log(`Error leaving room ${this.state.prevRoomId}: ${err}`);
+          console.log(`Error removing leah from room ${username}: ${err}`);
         });
+      //.leaveRoom({ roomId: this.state.prevRoomId })
+      // .then(room => {
+      //   console.log(`joined this room ${room}`);
+      // })
+      // .catch(err => {
+      //   console.log(`Error leaving room ${this.state.prevRoomId}: ${err}`);
+      // });
     }
     this.currentUser
       .joinRoom({ roomId: roomId })
@@ -109,6 +143,7 @@ class App extends Component {
         roomId: roomId,
         hooks: {
           onNewMessage: message => {
+            this.getRooms();
             this.setState({
               messages: [...this.state.messages, message]
             });
@@ -142,21 +177,26 @@ class App extends Component {
 
   usernameClick = username => {
     this.props.fetchUser({ username });
-
-    // const user = Api.getUser(username);
-    // console.log("this is click: ", user);
-    // this.props.fetchUser(user);
-    // Api.getUser(username).then(res => {
-    //   this.props.fetchUser(res);
-    //   console.log("clicked screename, ", res);
-    //   this.setState({ clickedUser: res });
-    //   console.log("my clicked user state: ", this.state.clickedUser);
-    // });
   };
 
   editProfile = () => {
     this.setState({ editProfile: true, clickedUser: false });
   };
+
+  // logOut = () => {
+  //   clearToken();
+  //   Api.logOut(this.props.me.username);
+  //   if (this.state.roomId) {
+  //     this.currentUser
+  //       .removeUserFromRoom({
+  //         userId: this.props.me.username,
+  //         roomId: this.state.roomId
+  //       })
+  //       .then(() => {
+  //         window.location.reload();
+  //       });
+  //   }
+  // };
 
   render() {
     const username = this.props.me && this.props.me.username;
@@ -170,6 +210,8 @@ class App extends Component {
           editProfile={this.editProfile}
           valueOfEdit={this.state.editProfile}
           currentUser={username}
+          roomId={this.state.roomId}
+          logOut={this.logOut}
         />
 
         {!username ? (

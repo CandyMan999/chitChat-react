@@ -27,7 +27,6 @@ class MessageList extends Component {
     return (
       <div className="message-list">
         {this.props.messages.map((message, index) => {
-          // console.log("!!#!#!#!#!#", message, index);
           return (
             <Message
               usernameClick={this.props.usernameClick}

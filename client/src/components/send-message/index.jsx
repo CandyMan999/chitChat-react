@@ -6,7 +6,6 @@ class SendMessageForm extends Component {
   };
 
   handleChange = e => {
-    // console.log(e.target.value);
     this.setState({
       message: e.target.value
     });

@@ -286,3 +286,10 @@ button:hover {
   cursor: pointer;
   border: solid 2px gold;
 }
+
+.userNumber {
+  color: gold;
+  font-size: 10px;
+  display: inherit;
+  margin-left: 10px;
+}
