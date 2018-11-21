@@ -9,6 +9,7 @@ import GoogleMap from "./components/map";
 import "./style.css";
 import Navbar from "./components/navbar";
 import Wrapper from "./components/wrapper";
+import MediaQuery from "react-responsive";
 
 import Api from "./utils/API";
 import Vidyo from "./components/vidyo";
@@ -19,6 +20,7 @@ import { tokenURL, instanceLocator } from "./config";
 import { connect } from "react-redux";
 import { fetchMe, login, signUp } from "./core/Session";
 import { fetchUser, blockUser } from "./core/Users";
+import CellPhone from "./components/cell-phone";
 
 class App extends Component {
   state = {
@@ -64,7 +66,7 @@ class App extends Component {
           const rooms = this.currentUser.rooms;
 
           this.setState({ usersInRooms: rooms });
-          
+
           this.getRooms();
         })
         .catch(err => console.log("error on connecting: ", err));
@@ -97,14 +99,13 @@ class App extends Component {
             ...this.state.joinableRooms,
             ...this.state.joinedRooms
           ];
-          
+
           allRooms.forEach(room => {
             if (room.userIds.length === 0 && room.name !== "Dallas") {
               Api.deleteRoom(room.id).then(res => {
                 console.log("we have a deleted a room", res);
                 this.getRooms();
 
-              
                 this.setState({
                   joinedRooms: this.state.joinedRooms.filter(
                     room => room.id !== this.state.prevRoomId
@@ -202,64 +203,69 @@ class App extends Component {
     const username = this.props.me && this.props.me.username;
     return (
       <div className="app">
-        {/* <source src={soundfile} type="audio/mpeg" /> */}
+        <MediaQuery query="(max-device-width: 1023px)">
+          <CellPhone />
+        </MediaQuery>
+        <MediaQuery query="(min-device-width: 1024px)">
+          <Navbar
+            onLogin={this.props.login}
+            onSignUp={this.props.signUp}
+            editProfile={this.editProfile}
+            valueOfEdit={this.state.editProfile}
+            currentUser={username}
+            roomId={this.state.roomId}
+            logOut={this.logOut}
+          />
+        </MediaQuery>
+        <MediaQuery query="(min-device-width: 1024px)">
+          {!username ? (
+            ""
+          ) : (
+            <Wrapper>
+              <RoomList
+                usersInRooms={this.state.usersInRooms}
+                roomId={this.state.roomId}
+                subscribeToRoom={this.subscribeToRoom}
+                rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
+              />
+              <MessageList
+                usernameClick={this.usernameClick}
+                roomId={this.state.roomId}
+                messages={this.state.messages}
+              />
+              <NewRoomForm createRoom={this.createRoom} />
+              <SendMessageForm
+                disabled={!this.state.roomId}
+                sendMessage={this.sendMessage}
+              />
+            </Wrapper>
+          )}
 
-        <Navbar
-          onLogin={this.props.login}
-          onSignUp={this.props.signUp}
-          editProfile={this.editProfile}
-          valueOfEdit={this.state.editProfile}
-          currentUser={username}
-          roomId={this.state.roomId}
-          logOut={this.logOut}
-        />
-
-        {!username ? (
-          ""
-        ) : (
-          <Wrapper>
-            <RoomList
-              usersInRooms={this.state.usersInRooms}
-              roomId={this.state.roomId}
-              subscribeToRoom={this.subscribeToRoom}
-              rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
-            />
-            <MessageList
-              usernameClick={this.usernameClick}
-              roomId={this.state.roomId}
-              messages={this.state.messages}
-            />
-            <NewRoomForm createRoom={this.createRoom} />
-            <SendMessageForm
-              disabled={!this.state.roomId}
-              sendMessage={this.sendMessage}
-            />
-          </Wrapper>
-        )}
-        <Profile
-          me={this.props.me}
-          blockUser={this.props.blockUser}
-          username={username}
-          editProfile={this.editProfile}
-          //clickedUser={this.state.clickedUser}
-          userId={this.props.me && this.props.me._id}
-          signupSubmitted={!!username} //this might blow
-        />
-        {username && (
-          <main className="map">
-            <GoogleMap
-              me={this.props.me}
+          <Profile
+            me={this.props.me}
+            blockUser={this.props.blockUser}
+            username={username}
+            editProfile={this.editProfile}
+            //clickedUser={this.state.clickedUser}
+            userId={this.props.me && this.props.me._id}
+            signupSubmitted={!!username} //this might blow
+          />
+          {username && (
+            <main className="map">
+              <GoogleMap
+                me={this.props.me}
+                clickedUser={this.props.profileUser}
+              />
+            </main>
+          )}
+          <div className="vidyo">
+            <Vidyo
+              style={{ background: "beige" }}
+              username={username}
               clickedUser={this.props.profileUser}
             />
-          </main>
-        )}
-        <div className="vidyo">
-          <Vidyo
-            style={{ background: "beige" }}
-            username={username}
-            clickedUser={this.props.profileUser}
-          />
-        </div>
+          </div>
+        </MediaQuery>
       </div>
     );
   }
