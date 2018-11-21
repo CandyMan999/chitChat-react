@@ -73,7 +73,7 @@ class Profile extends Component {
 
   render() {
     const isBlocked = this.determineIsBlocked();
-    console.log("!!!!", isBlocked);
+
     const showIsBlocked =
       this.props.me &&
       this.props.me.username &&
@@ -247,13 +247,13 @@ class Profile extends Component {
                 {this.props.clickedUser.pics.map((pic, i) => {
                   return (
                     <div
-                      key={pic.pics._id}
+                      key={pic._id}
                       className={
                         i === 0 ? "carousel-item active" : "carousel-item "
                       }
                     >
                       <img
-                        key={pic.pics._id}
+                        key={pic._id}
                         style={{
                           width: "100%",
                           height: "auto",

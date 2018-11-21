@@ -38,7 +38,6 @@ function* login({ payload: { username, shouldPersist, password } }) {
       yield put(setMe(response.data.user));
       yield put(setProfileUser(response.data.user));
     }
-    console.log("anything");
   } catch (error) {
     console.error("error", error);
     yield put(setError("Invalid Username or Password"));
@@ -63,9 +62,6 @@ export const sessionSagas = [
   takeLatest(FETCH_ME, fetchMe),
   takeLatest(LOGIN, login),
   takeLatest(SIGNUP, signUp)
-
-  // takeLatest(LOGIN, login),
-  // takeLatest(LOGOUT, logout)
 ];
 
 export default sessionSagas;

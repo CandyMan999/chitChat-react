@@ -12,7 +12,7 @@ const initialState = {
 };
 export default function reducer(state = initialState, action = {}) {
   const { type, payload } = action;
-  console.log(type);
+
   switch (type) {
     case SET_PROFILE_USER:
       return {
@@ -30,11 +30,10 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 //action creators  the actual functions that send actions to the reducer export all of our creators import with {}
-export const fetchUser = payload =>
-  console.log("fires") || {
-    type: FETCH_USER,
-    payload
-  };
+export const fetchUser = payload => ({
+  type: FETCH_USER,
+  payload
+});
 
 // export const fetchProfileUser = payload => ({
 //   type: FETCH_PROFILE_USER,

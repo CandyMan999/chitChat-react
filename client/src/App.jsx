@@ -64,7 +64,7 @@ class App extends Component {
           const rooms = this.currentUser.rooms;
 
           this.setState({ usersInRooms: rooms });
-          console.log("####", rooms);
+          
           this.getRooms();
         })
         .catch(err => console.log("error on connecting: ", err));
@@ -97,14 +97,14 @@ class App extends Component {
             ...this.state.joinableRooms,
             ...this.state.joinedRooms
           ];
-          console.log(allRooms, "what the fuck");
+          
           allRooms.forEach(room => {
             if (room.userIds.length === 0 && room.name !== "Dallas") {
               Api.deleteRoom(room.id).then(res => {
                 console.log("we have a deleted a room", res);
                 this.getRooms();
 
-                console.log("this room has people", room.userIds, room.id);
+              
                 this.setState({
                   joinedRooms: this.state.joinedRooms.filter(
                     room => room.id !== this.state.prevRoomId
@@ -118,7 +118,7 @@ class App extends Component {
           });
         })
         .catch(err => {
-          console.log(`Error removing leah from room 123: ${err}`);
+          console.log(`Error removing leah from room ${username}: ${err}`);
         });
       //.leaveRoom({ roomId: this.state.prevRoomId })
       // .then(room => {
@@ -183,20 +183,20 @@ class App extends Component {
     this.setState({ editProfile: true, clickedUser: false });
   };
 
-  logOut = () => {
-    clearToken();
-    Api.logOut(this.props.me.username);
-    if (this.state.roomId) {
-      this.currentUser
-        .removeUserFromRoom({
-          userId: this.props.me.username,
-          roomId: this.state.roomId
-        })
-        .then(() => {
-          window.location.reload();
-        });
-    }
-  };
+  // logOut = () => {
+  //   clearToken();
+  //   Api.logOut(this.props.me.username);
+  //   if (this.state.roomId) {
+  //     this.currentUser
+  //       .removeUserFromRoom({
+  //         userId: this.props.me.username,
+  //         roomId: this.state.roomId
+  //       })
+  //       .then(() => {
+  //         window.location.reload();
+  //       });
+  //   }
+  // };
 
   render() {
     const username = this.props.me && this.props.me.username;
