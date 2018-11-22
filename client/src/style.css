@@ -305,3 +305,15 @@ button:hover {
 .lucky {
   color: green;
 }
+.jumbotron {
+  margin-bottom: 0px;
+}
+.invalid {
+  color: red;
+  font-size: 30px;
+  padding-top: inherit;
+}
+.profileName {
+  font-family: rancho;
+  text-align: center;
+}

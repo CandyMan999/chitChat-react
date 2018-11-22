@@ -11,6 +11,7 @@ export const SET_ERROR = "SESSION/SET_ERROR";
 export const BLOCK_USER = "SESSION/BLOCK_USER";
 export const UNBLOCK_USER = "SESSION/UNBLOCK_USER";
 export const SIGNUP = "SESSION/SIGNUP";
+export const UPDATE_PROFILE = "SESSION/UPDATE_PROFILE";
 
 //initial state
 const initialState = {
@@ -62,6 +63,11 @@ export default function reducer(state = initialState, action) {
             username => username !== payload
           )
         }
+      };
+    case UPDATE_PROFILE:
+      return {
+        ...state,
+        me: payload
       };
     default:
       return state;
@@ -118,5 +124,10 @@ export const blockUser = payload => ({
 
 export const unBlockUser = payload => ({
   type: UNBLOCK_USER,
+  payload
+});
+
+export const updateProfile = payload => ({
+  type: UPDATE_PROFILE,
   payload
 });

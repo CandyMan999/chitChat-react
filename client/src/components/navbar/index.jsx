@@ -65,6 +65,9 @@ class Navbar extends Component {
             </button>
           </div>
         )}
+        {!this.props.currentUser && this.props.error && (
+          <p className="invalid">{this.props.error}</p>
+        )}
         {this.state.login && !this.props.currentUser ? (
           <form>
             <input
@@ -75,7 +78,6 @@ class Navbar extends Component {
               value={this.state.username}
               onChange={e => this.handleChange(e, "username")}
             />
-            {this.props.error && <p>{this.props.error}</p>}
             <input
               type="password"
               placeholder="Password"

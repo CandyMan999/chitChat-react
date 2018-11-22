@@ -4,7 +4,13 @@ import PhotoUploader from "./photo-uploader";
 import Api from "../../utils/API";
 import omit from "lodash/omit";
 import { getProfileUser } from "../../core/Users/selectors";
-import { fetchMe, blockUser, unBlockUser } from "../../core/Session";
+import {
+  fetchMe,
+  blockUser,
+  unBlockUser,
+  updateProfile,
+  setMe
+} from "../../core/Session";
 import { fetchUser } from "../../core/Users";
 class Profile extends Component {
   state = {
@@ -32,9 +38,12 @@ class Profile extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.editProfile();
-    alert("your profile has been updated");
+
     const id = this.props.userId;
-    Api.updateUser(id, omit(this.state, ["accepted", "rejected"]));
+    //const _id = this.props.me._id;
+    const data = omit(this.state, ["accepted", "rejected"]);
+    //this.props.updateProfile({ id, _id, data });
+    Api.updateUser(id, data);
     window.location.reload();
     // this.props.fetchUser(this.props.me.username)// TODO set in edit to false here somehow
   };
@@ -228,7 +237,7 @@ class Profile extends Component {
                 alt="mapIcon"
               />
               <br />
-              <button onClick={this.handleSubmit} id="profileSubmit">
+              <button onClick={e => this.handleSubmit(e)} id="profileSubmit">
                 Save
               </button>
             </form>
@@ -421,7 +430,9 @@ const mapDispatchToProps = dispatch => ({
   fetchMe: () => dispatch(fetchMe()),
   fetchUser: payload => dispatch(fetchUser(payload)),
   blockUser: payload => dispatch(blockUser(payload)),
-  unblockUser: payload => dispatch(unBlockUser(payload))
+  unblockUser: payload => dispatch(unBlockUser(payload)),
+  updateProfile: payload => dispatch(updateProfile(payload)),
+  setMe: payload => dispatch(setMe(payload))
 });
 
 const mapStateToProps = state => ({

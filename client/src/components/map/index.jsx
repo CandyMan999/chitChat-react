@@ -115,12 +115,15 @@ class GoogleMap extends Component {
           }
         >
           <div>
-            <h1>{this.state.selectedUser.username}</h1>
+            <h1 className="profileName font-effect-fire-animation">
+              {this.state.selectedUser.username}
+            </h1>
             <img
               style={{
                 width: "100%",
                 height: "auto",
-                border: "solid 2px mediumaquamarine"
+                border: "solid 2px mediumaquamarine",
+                borderRadius: "50px"
               }}
               className="d-block w-100"
               src={

@@ -1,6 +1,7 @@
 import { takeLatest, call, put } from "redux-saga/effects";
 
 import {
+  UPDATE_PROFILE,
   setError,
   FETCH_ME,
   setMe,
@@ -57,11 +58,29 @@ function* signUp({ payload: { username, email, password, shouldPersist } }) {
   }
 }
 
+function* updateProfile({ payload: { id, data } }) {
+  console.log("payoad", id, data);
+  const token = getToken();
+  if (token) {
+    try {
+      const response = yield call(Api.updateUser, { id, data, token });
+      if (response) {
+        console.log("PROILE UPDATE", response);
+        yield put(setMe(response.data.user));
+        yield put(setProfileUser(response.data.user));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
 ///this is boiler plate needed for each ruducer folder..... several sagas for each reducer
 export const sessionSagas = [
   takeLatest(FETCH_ME, fetchMe),
   takeLatest(LOGIN, login),
-  takeLatest(SIGNUP, signUp)
+  takeLatest(SIGNUP, signUp),
+  takeLatest(UPDATE_PROFILE, updateProfile)
 ];
 
 export default sessionSagas;
