@@ -171,6 +171,7 @@ iframe {
   color: white;
   display: -webkit-inline-box;
   font-size: 10px;
+  border-radius: 5px;
 }
 .message-username {
   font-size: 10px;

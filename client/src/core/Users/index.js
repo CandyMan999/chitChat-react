@@ -8,7 +8,8 @@ export const BLOCK_USER = "USERS/BLOCK_USER";
 
 //reducer  function that mutates state
 const initialState = {
-  blockedUsers: []
+  blockedUsers: [],
+  profileUser: null
 };
 export default function reducer(state = initialState, action = {}) {
   const { type, payload } = action;

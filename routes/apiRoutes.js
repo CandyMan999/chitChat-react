@@ -154,6 +154,18 @@ router.post("/api/users", async (req, res) => {
   }
 });
 
+router.put("/api/reload/:username", (req, res) => {
+  db.User.findOneAndUpdate(
+    { username: req.params.username },
+    { $set: { isLoggedIn: true } },
+    { new: true }
+  )
+    .then(() => {
+      res.json({ user, token });
+    })
+    .catch(err => res.json(err));
+});
+
 router.post("/login", (req, res) => {
   db.User.findOne({
     username: req.body.username

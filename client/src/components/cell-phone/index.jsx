@@ -1,5 +1,6 @@
 import React from "react";
 //import {token} from "../../utils/"
+import logo from "../../utils/images/liveBait.png";
 
 const CellPhone = () => ({
   render() {
@@ -14,7 +15,7 @@ const CellPhone = () => ({
             which you can download for Mobile with even MORE cool Features!!
           </p>
           <hr />
-          {/* <img src="../../utils/images/liveBait.png" alt="livebait" /> */}
+          <img src={logo} alt="livebait" />
 
           <a
             href="https://play.google.com/store/apps/details?id=com.livebat"

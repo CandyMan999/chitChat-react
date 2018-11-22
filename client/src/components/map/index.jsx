@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
+import { Map, InfoWindow, GoogleApiWrapper } from "google-maps-react";
+import Marker from "./marker";
 import Api from "../../utils/API";
+import { connect } from "react-redux";
 
 class GoogleMap extends Component {
   state = {
@@ -9,8 +11,7 @@ class GoogleMap extends Component {
     users: null,
     showingInfoWindow: false,
     activeMarker: {},
-    selectedUser: {} || this.props.clickedUser,
-    clickedUser: this.props.clickedUser && this.props.clickedUser.username
+    selectedUser: {}
   };
 
   // TODO need to pass user object down to here or at least userLocation
@@ -42,11 +43,23 @@ class GoogleMap extends Component {
         });
       }
     }
+    console.log("in update", this.props.profileUser);
+    if (
+      !!this.props.profileUser &&
+      prevProps.profileUser.username !== this.props.profileUser.username
+    ) {
+      console.log("updating...");
+      this.setState({
+        selectedUser: this.props.profileUser
+
+        // showingInfoWindow: true
+      });
+    }
   }
 
   onMarkerClick = (props, marker, e) => {
     this.setState({
-      selectedUser: props,
+      selectedUser: props.user,
       activeMarker: marker,
       showingInfoWindow: true
     });
@@ -66,7 +79,7 @@ class GoogleMap extends Component {
       <Map
         onClick={this.onMapClicked}
         google={this.props.google}
-        zoom={7}
+        zoom={10}
         style={{ width: "100%", height: "100%" }}
         initialCenter={this.state.userLocation}
       >
@@ -79,38 +92,30 @@ class GoogleMap extends Component {
           onClick={this.onMarkerClick}
           name={"Current location"}
         /> */}
+
         {this.state.users &&
           !!this.state.users.length &&
-          this.state.users.map(user =>
-            user.pics.length >= 1 ? (
-              <Marker
-                key={user._id}
-                postition={user.location}
-                onClick={this.onMarkerClick}
-                name={user.username}
-                image={user.pics[0].pics.url}
-                animation={
-                  this.state.selectedUser.username ===
-                  this.state.clickedUser.username
-                    ? this.props.google.maps.Animation.BOUNCE
-                    : ""
-                }
-              />
-            ) : (
-              <Marker
-                key={user._id}
-                postition={user.location}
-                onClick={this.onMarkerClick}
-                name={user.username}
-              />
-            )
-          )}
+          this.state.users.map(user => (
+            <Marker
+              key={user._id}
+              postition={user.location}
+              onClick={this.onMarkerClick}
+              onActivation={marker => this.setState({ activeMarker: marker })}
+              user={
+                console.log("marker!!", user, this.state.selectedUser) || user
+              }
+              selected={user.username === this.state.selectedUser.username}
+            />
+          ))}
         <InfoWindow
           marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
+          visible={!!this.state.activeMarker}
+          onClose={() =>
+            this.setState({ selectedUser: {}, activeMarker: null })
+          }
         >
           <div>
-            <h1>{this.state.selectedUser.name}</h1>
+            <h1>{this.state.selectedUser.username}</h1>
             <img
               style={{
                 width: "100%",
@@ -119,8 +124,9 @@ class GoogleMap extends Component {
               }}
               className="d-block w-100"
               src={
-                this.state.selectedUser.image
-                  ? this.state.selectedUser.image
+                this.state.selectedUser.pics &&
+                !!this.state.selectedUser.pics.length
+                  ? this.state.selectedUser.pics[0].pics.url
                   : "https://static.thenounproject.com/png/994628-200.png"
               }
               alt="profile_image"
@@ -131,6 +137,10 @@ class GoogleMap extends Component {
     ) : null;
   }
 }
+
+// const mapStateToProps = state => ({
+//   profileUser: state.users.profileUser
+// });
 
 export default GoogleApiWrapper({
   apiKey: "AIzaSyBFUrGNjQUHEI5MHH3XpNLCxWbWhII9_PM"

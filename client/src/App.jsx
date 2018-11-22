@@ -34,12 +34,14 @@ class App extends Component {
     prevRoomId: null
   };
 
-  componentDidMount = () => {
-    this.props.fetchMe();
+  componentDidMount = async () => {
+    await this.props.fetchMe();
   };
 
   componentDidUpdate = (prevProps, prevState) => {
     const username = this.props.me && this.props.me.username;
+
+    Api.reload(this.props.me.username);
 
     if (username && (!prevProps.me || username !== prevProps.me.username)) {
       const chatManager = new ChatManager({
@@ -200,6 +202,21 @@ class App extends Component {
   // };
 
   render() {
+    window.addEventListener("beforeunload", ev => {
+      ev.preventDefault();
+      Api.logOut(this.props.me.username);
+      this.currentUser
+        .removeUserFromRoom({
+          userId: this.props.me.username,
+          roomId: this.state.roomId
+        })
+        .then(() => {
+          console.log("user left room");
+        });
+
+      return (ev.returnValue = "Are you sure you want to close?");
+    });
+
     const username = this.props.me && this.props.me.username;
     return (
       <div className="app">
@@ -254,7 +271,7 @@ class App extends Component {
             <main className="map">
               <GoogleMap
                 me={this.props.me}
-                clickedUser={this.props.profileUser}
+                profileUser={this.props.profileUser}
               />
             </main>
           )}

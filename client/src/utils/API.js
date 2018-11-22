@@ -131,5 +131,15 @@ export default {
 
   updateImage: (id, data) => {
     console.log("file on the backend: ", data);
+  },
+
+  reload: username => {
+    axios({
+      url: `/api/reload/${username}`,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => console.log(res));
   }
 };
