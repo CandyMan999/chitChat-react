@@ -58,7 +58,6 @@ class Profile extends Component {
     Api.blockUser(blockingUser, blockedUser).then(() =>
       this.props.blockUser(blockedUser)
     );
-    alert(`${blockedUser} has been Blocked!`);
   };
 
   unblockUser = () => {
@@ -67,7 +66,6 @@ class Profile extends Component {
     Api.unBlockUser(blockingUser, blockedUser).then(() => {
       this.props.unblockUser(blockedUser);
     });
-    alert(`${blockedUser} has been UNBlOCKED!`);
   };
 
   determineIsBlocked = () => {
