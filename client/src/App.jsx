@@ -106,7 +106,6 @@ class App extends Component {
             if (room.userIds.length === 0 && room.name !== "Dallas") {
               Api.deleteRoom(room.id).then(res => {
                 console.log("we have a deleted a room", res);
-                this.getRooms();
 
                 this.setState({
                   joinedRooms: this.state.joinedRooms.filter(
@@ -117,6 +116,7 @@ class App extends Component {
                   )
                 });
               });
+              this.getRooms();
             }
           });
         })
