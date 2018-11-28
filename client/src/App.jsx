@@ -13,7 +13,6 @@ import MediaQuery from "react-responsive";
 
 import Api from "./utils/API";
 import Vidyo from "./components/vidyo";
-import { clearToken } from "./utils/helpers";
 
 import { tokenURL, instanceLocator } from "./config";
 
@@ -236,7 +235,12 @@ class App extends Component {
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1024px)">
           {!username ? (
-            ""
+            <div className="enable">
+              <h2>
+                Please Enable Your Browser Access To Location And Camera To
+                Experience All Features of this Website !!!
+              </h2>
+            </div>
           ) : (
             <Wrapper>
               <RoomList

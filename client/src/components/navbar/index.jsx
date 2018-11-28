@@ -44,7 +44,7 @@ class Navbar extends Component {
   render() {
     return (
       <nav style={{ color: "mediumaquamarine" }} className="navbar ">
-        {" "}
+        <h2 className="logo font-effect-fire-animation">AOLisBack</h2>{" "}
         {this.props.currentUser ? (
           ""
         ) : (
@@ -88,7 +88,7 @@ class Navbar extends Component {
             <button id="logSubmit" onClick={this.handleLogin}>
               Submit
             </button>
-            Keep me signed in
+            <span>Keep me signed in </span>
             <input
               onChange={e => this.handleChange(e, "shouldPersist")}
               type="checkbox"
@@ -127,7 +127,7 @@ class Navbar extends Component {
             <button onClick={this.handleSignUp} id="signSubmit">
               Submit
             </button>
-            Keep me signed in
+            <span>Keep me signed in </span>
             <input
               onChange={e => this.handleChange(e, "shouldPersist")}
               type="checkbox"

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Map, InfoWindow, GoogleApiWrapper } from "google-maps-react";
 import Marker from "./marker";
 import Api from "../../utils/API";
-import { connect } from "react-redux";
 
 class GoogleMap extends Component {
   state = {
@@ -17,6 +16,19 @@ class GoogleMap extends Component {
   // TODO need to pass user object down to here or at least userLocation
 
   componentDidMount() {
+    //   if (navigator.geolocation) {
+    //  try{
+    //    navigator.geolocation.getCurrentPosition(({ coords }) => {
+    //       if (coords) {
+    //         console.log("we have your location");
+    //       } else {
+    //         console.log("you dont have a location");
+    //       }
+    //     });
+    //  }   catch (error){
+    //   console.log("we cannot find you")
+    //  }
+
     Api.getAllUsers()
       .then(res => {
         this.setState({ users: res });
@@ -43,12 +55,11 @@ class GoogleMap extends Component {
         });
       }
     }
-    console.log("in update", this.props.profileUser);
+
     if (
       !!this.props.profileUser &&
       prevProps.profileUser.username !== this.props.profileUser.username
     ) {
-      console.log("updating...");
       this.setState({
         selectedUser: this.props.profileUser
 
@@ -101,9 +112,7 @@ class GoogleMap extends Component {
               postition={user.location}
               onClick={this.onMarkerClick}
               onActivation={marker => this.setState({ activeMarker: marker })}
-              user={
-                console.log("marker!!", user, this.state.selectedUser) || user
-              }
+              user={user}
               selected={user.username === this.state.selectedUser.username}
             />
           ))}
@@ -115,7 +124,7 @@ class GoogleMap extends Component {
           }
         >
           <div>
-            <h1 className="profileName font-effect-fire-animation">
+            <h1 className="profileName font-effect-shadow-multiple">
               {this.state.selectedUser.username}
             </h1>
             <img
@@ -146,5 +155,5 @@ class GoogleMap extends Component {
 // });
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyBFUrGNjQUHEI5MHH3XpNLCxWbWhII9_PM"
+  apiKey: process.env.REACT_APP_MAP_KEY
 })(GoogleMap);

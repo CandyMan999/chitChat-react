@@ -32,6 +32,13 @@ body {
     "v v v g g g"
     "v v v g g g"
     "v v v g g g";
+  overflow: hidden;
+}
+.enable {
+  display: grid;
+  grid-area: c;
+  margin: 30px;
+  color: red;
 }
 .vidyo {
   grid-area: v;
@@ -40,6 +47,11 @@ body {
 iframe {
   height: 100%;
   width: 100%;
+}
+
+.logo {
+  display: contents;
+  font-family: rancho;
 }
 
 .wrapper {
@@ -67,8 +79,7 @@ iframe {
 }
 .map {
   grid-area: g;
-  overflow: hidden;
-  padding-bottom: 56.25%;
+  overflow-y: scroll;
   position: relative;
   height: 100%;
 }
@@ -211,6 +222,9 @@ iframe {
   text-shadow: 2px 2px white;
 }
 
+.logOut {
+  margin-left: 60%;
+}
 .logOut:hover {
   color: mediumaquamarine;
   cursor: pointer;
@@ -316,4 +330,23 @@ button:hover {
 .profileName {
   font-family: rancho;
   text-align: center;
+}
+
+#logSubmit {
+  margin-right: 5px;
+}
+
+#signSubmit {
+  margin-right: 5px;
+}
+#logSubmit:hover {
+  color: mediumaquamarine;
+  cursor: pointer;
+  border: solid 2px gold;
+}
+
+#signSubmit:hover {
+  color: mediumaquamarine;
+  cursor: pointer;
+  border: solid 2px gold;
 }

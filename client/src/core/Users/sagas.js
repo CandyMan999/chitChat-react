@@ -10,7 +10,7 @@ import { removeInEdit } from "../Session";
 
 function* fetchUser({ payload: { username } }) {
   const response = yield call(Api.getUser, username);
-  console.log("saga", response);
+
   if (response) {
     yield put(setProfileUser(response));
     yield put(removeInEdit());

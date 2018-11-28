@@ -4,11 +4,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const fs = require("fs");
 const formidable = require("express-formidable");
-require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
+console.log(process.env.CLOUD_NAME);
 // Define middleware here
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

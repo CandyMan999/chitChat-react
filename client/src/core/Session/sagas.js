@@ -6,14 +6,14 @@ import {
   FETCH_ME,
   setMe,
   LOGIN,
-  LOGOUT,
+  // LOGOUT,
   SIGNUP,
-  clearMe,
+  //clearMe,
   fetchMe as fetchMeAction
 } from "./index";
 import Api from "../../utils/API";
 
-import { getToken, setToken, clearToken } from "../../utils/helpers";
+import { getToken, setToken } from "../../utils/helpers";
 import { setProfileUser } from "../Users";
 
 //call invokes a function
@@ -59,7 +59,6 @@ function* signUp({ payload: { username, email, password, shouldPersist } }) {
 }
 
 function* updateProfile({ payload: { id, data } }) {
-  console.log("payoad", id, data);
   const token = getToken();
   if (token) {
     try {

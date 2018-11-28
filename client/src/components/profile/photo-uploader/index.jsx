@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 
 import Api from "../../../utils/API";
