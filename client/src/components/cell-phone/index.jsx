@@ -23,7 +23,7 @@ const CellPhone = () => ({
               href="https://play.google.com/store/apps/details?id=com.livebat"
               className="btn btn-primary"
             >
-              DownLoad LiveBait
+              DownLoad LiveBait (Android)
             </a>
           </div>
         </div>
