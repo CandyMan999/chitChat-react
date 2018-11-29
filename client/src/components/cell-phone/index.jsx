@@ -13,18 +13,25 @@ const CellPhone = () => ({
             <h1 className="display-4">AOLisBack</h1>
             <p className="lead">
               This website is <span className="cell">NOT</span> for{" "}
-              <span className="cell">MOBILE DEVICES</span> !{" "}
+              <span className="cell">MOBILE DEVICES</span>!{" "}
               <span className="lucky">LUCKY</span> for you, we have a sister App
               which you can download for Mobile with even MORE cool Features!!
             </p>
             <hr />
-
-            <a
-              href="https://play.google.com/store/apps/details?id=com.livebat"
-              className="btn btn-primary"
-            >
-              DownLoad LiveBait (Android)
-            </a>
+            <div className="appStore">
+              <a
+                href="https://play.google.com/store/apps/details?id=com.livebat"
+                className="btn btn-primary"
+              >
+                LiveBait (Android)
+              </a>
+              <a
+                href="https://itunes.apple.com/us/app/livebait-totally-live/id1334051224?ls=1&mt=8"
+                className="btn btn-primary"
+              >
+                LiveBait (iOS)
+              </a>
+            </div>
           </div>
         </div>
         <div
