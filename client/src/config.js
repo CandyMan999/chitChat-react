@@ -1,6 +1,6 @@
 // TODO handle heroku/aws deployment
 //aolisback for authenticate
-const tokenURL = "http://localhost:3001/authenticate";
+const tokenURL = "https://www.aolisback.com/authenticate";
 
 const instanceLocator = "v1:us1:a55d6d92-ceb4-4e02-a75e-b47722122dcb";
 

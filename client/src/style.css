@@ -324,7 +324,7 @@ button:hover {
 }
 .invalid {
   color: red;
-  font-size: 30px;
+  font-size: 15px;
   padding-top: inherit;
 }
 .profileName {
