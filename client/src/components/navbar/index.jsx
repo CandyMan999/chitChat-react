@@ -99,7 +99,7 @@ class Navbar extends Component {
         ) : (
           ""
         )}{" "}
-        {this.state.signup && !this.state.signInSubmitted ? (
+        {this.state.signup && !this.props.currentUser ? (
           <form>
             <input
               style={{ margin: "2px" }}

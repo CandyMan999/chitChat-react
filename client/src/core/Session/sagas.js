@@ -55,6 +55,7 @@ function* signUp({ payload: { username, email, password, shouldPersist } }) {
     }
   } catch (error) {
     console.log(error);
+    yield put(setError("This Username Already Exsists!"));
   }
 }
 

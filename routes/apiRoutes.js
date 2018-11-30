@@ -133,7 +133,7 @@ router.post("/api/users", async (req, res) => {
     db.User.findOneAndUpdate(
       { username: userRes.username },
       { $set: { isLoggedIn: true } }
-    ).catch(err => console.log(err));
+    ).catch(err => console.log("shit", err));
 
     const token = jwt.sign({ id: userRes._id }, SECRET, {
       expiresIn: "14 days"
