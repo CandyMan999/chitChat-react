@@ -134,7 +134,7 @@ class GoogleMap extends Component {
                 border: "solid 2px mediumaquamarine",
                 borderRadius: "50px"
               }}
-              className="d-block w-100"
+              className="d-block w-100 mapImage"
               src={
                 this.state.selectedUser.pics &&
                 !!this.state.selectedUser.pics.length

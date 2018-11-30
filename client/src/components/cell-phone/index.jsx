@@ -10,7 +10,7 @@ const CellPhone = () => ({
         {" "}
         <div className="jumbotron jumbotron-fluid">
           <div className="container">
-            <h1 className="display-4">AOLisBack</h1>
+            <h1 className="display-4 font-effect-fire-animation">AOLisBack</h1>
             <p className="lead">
               This website is <span className="cell">NOT</span> for{" "}
               <span className="cell">MOBILE DEVICES</span>!{" "}
