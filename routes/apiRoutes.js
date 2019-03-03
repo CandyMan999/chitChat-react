@@ -48,7 +48,6 @@ const tokenAuthenticate = (req, res, next) => {
 };
 
 router.delete("/api/rooms/:id", (req, res) => {
-  console.log("wat");
   chatkit
     .deleteRoom({
       id: req.params.id
@@ -58,7 +57,6 @@ router.delete("/api/rooms/:id", (req, res) => {
 });
 
 router.delete("/api/users/:id/images/:photo_id", (req, res) => {
-  console.log("$$$", req.params.id, req.params.photo_id);
   db.User.findOneAndUpdate(
     { _id: req.params.id },
     {
@@ -71,17 +69,11 @@ router.delete("/api/users/:id/images/:photo_id", (req, res) => {
 });
 
 router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
-  console.log("!!!!!!!!!", req.file);
-  console.log("?????", req.body);
   const image = {
     pics: { url: req.file.url }
   };
-
-  console.log("this is what I am trying to store: ", image);
-
   db.Picture.create(image) // save image information in database
     .then(function(dbImage) {
-      console.log("image created");
       return db.User.findOneAndUpdate(
         {
           _id: req.params.id
@@ -92,7 +84,6 @@ router.post("/api/users/:id/image", parser.single("image"), (req, res) => {
         }
       )
         .then(function(dbImage) {
-          console.log("i found something: ", dbImage);
           res.json({
             data: {
               imageId: dbImage.pics.slice(-1)
@@ -117,8 +108,6 @@ router.get("/api/users/:username", (req, res) => {
 router.post("/api/users", async (req, res) => {
   try {
     const userRes = await db.User.create(req.body);
-    //console.log("this is my user: ", userRes);
-
     db.User.findOneAndUpdate(
       { username: userRes.username },
       { $set: { isLoggedIn: true } }
@@ -127,8 +116,6 @@ router.post("/api/users", async (req, res) => {
     const token = jwt.sign({ id: userRes._id }, SECRET, {
       expiresIn: "14 days"
     });
-    console.log("my token: ", token);
-
     chatkit
       .createUser({
         id: userRes.username,
@@ -138,7 +125,6 @@ router.post("/api/users", async (req, res) => {
       .catch(error => {
         res.status(error.status).json(error);
       });
-    console.log("chatkit token: ", token);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -227,7 +213,6 @@ router.put("/api/logout/:username", (req, res) => {
 });
 
 router.put("/api/block/:blockingUser/:blockedUser", (req, res) => {
-  console.log("###########", req.params.blockingUser, req.params.blockedUser);
   db.User.findOneAndUpdate(
     { username: req.params.blockingUser },
     { $push: { blockedUsers: req.params.blockedUser } },

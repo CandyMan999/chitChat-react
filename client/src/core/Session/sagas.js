@@ -65,7 +65,6 @@ function* updateProfile({ payload: { id, data } }) {
     try {
       const response = yield call(Api.updateUser, { id, data, token });
       if (response) {
-        console.log("PROILE UPDATE", response);
         yield put(setMe(response.data.user));
         yield put(setProfileUser(response.data.user));
       }

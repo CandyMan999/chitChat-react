@@ -23,7 +23,6 @@ class Navbar extends Component {
 
   handleLogin = e => {
     e.preventDefault();
-    console.log("clicked");
     const { username, password, shouldPersist } = this.state;
     this.props.onLogin({ username, password, shouldPersist });
   };

@@ -16,19 +16,6 @@ class GoogleMap extends Component {
   // TODO need to pass user object down to here or at least userLocation
 
   componentDidMount() {
-    //   if (navigator.geolocation) {
-    //  try{
-    //    navigator.geolocation.getCurrentPosition(({ coords }) => {
-    //       if (coords) {
-    //         console.log("we have your location");
-    //       } else {
-    //         console.log("you dont have a location");
-    //       }
-    //     });
-    //  }   catch (error){
-    //   console.log("we cannot find you")
-    //  }
-
     Api.getAllUsers()
       .then(res => {
         this.setState({ users: res });
