@@ -23,6 +23,7 @@ class Navbar extends Component {
 
   handleLogin = e => {
     e.preventDefault();
+    console.log("clicked");
     const { username, password, shouldPersist } = this.state;
     this.props.onLogin({ username, password, shouldPersist });
   };
@@ -50,16 +51,19 @@ class Navbar extends Component {
         ) : (
           <div className="navButtons">
             <button
-              style={{ border: `5px  solid${this.state.login ? " gold" : ""}` }}
+              style={{
+                border: `5px  solid${this.state.login ? " gold" : ""}`,
+                marginRight: "30px"
+              }}
               onClick={() => this.setState({ login: true, signup: false })}
-              className="sign-up"
             >
               Login
             </button>
             <button
-              style={{ border: `5px solid${this.state.signup ? " gold" : ""}` }}
+              style={{
+                border: `5px solid${this.state.signup ? " gold" : ""}`
+              }}
               onClick={() => this.setState({ login: false, signup: true })}
-              className="sign-up"
             >
               Sign-Up
             </button>
@@ -69,7 +73,9 @@ class Navbar extends Component {
           <p className="invalid">{this.props.error}</p>
         )}
         {this.state.login && !this.props.currentUser ? (
-          <form>
+          <form
+            style={{ position: "absolute", display: "flex", marginLeft: "30%" }}
+          >
             <input
               style={{ margin: "2px" }}
               type="text"
@@ -79,17 +85,22 @@ class Navbar extends Component {
               onChange={e => this.handleChange(e, "username")}
             />
             <input
+              style={{ margin: "2px" }}
               type="password"
               placeholder="Password"
               name="password"
               value={this.state.password}
               onChange={e => this.handleChange(e, "password")}
             />
-            <button id="logSubmit" onClick={this.handleLogin}>
+            <button
+              style={{ marginRight: "10px", margin: "2px" }}
+              onClick={this.handleLogin}
+            >
               Submit
             </button>
-            <span>Keep me signed in </span>
+            <span style={{ margin: "5px" }}>Keep me signed in </span>
             <input
+              style={{ margin: "10px" }}
               onChange={e => this.handleChange(e, "shouldPersist")}
               type="checkbox"
               name="shouldPersist"
@@ -100,7 +111,9 @@ class Navbar extends Component {
           ""
         )}{" "}
         {this.state.signup && !this.props.currentUser ? (
-          <form>
+          <form
+            style={{ position: "absolute", display: "flex", marginLeft: "30%" }}
+          >
             <input
               style={{ margin: "2px" }}
               type="text"
@@ -110,6 +123,7 @@ class Navbar extends Component {
               onChange={e => this.handleChange(e, "email")}
             />
             <input
+              style={{ margin: "2px" }}
               type="password"
               placeholder="Password"
               name="password"
@@ -124,12 +138,16 @@ class Navbar extends Component {
               value={this.state.username}
               onChange={e => this.handleChange(e, "username")}
             />
-            <button onClick={this.handleSignUp} id="signSubmit">
+            <button
+              style={{ marginRight: "10px", margin: "2px" }}
+              onClick={this.handleSignUp}
+            >
               Submit
             </button>
-            <span>Keep me signed in </span>
+            <span style={{ margin: "5px" }}>Keep me signed in </span>
             <input
               onChange={e => this.handleChange(e, "shouldPersist")}
+              style={{ margin: "10px" }}
               type="checkbox"
               name="shouldPersist"
               value={!this.state.shouldPersist}

@@ -57,17 +57,6 @@ router.delete("/api/rooms/:id", (req, res) => {
     .catch(err => console.error(err) || res.sendStatus(401));
 });
 
-// chatkit.deleteMessage({
-//   id: messageToDelete.id
-// })
-//   .then(() => console.log('gone forever'))
-//   .catch(err => console.error(err))
-
-// chatkit
-//   .getRooms({})
-//   .then(rooms => console.log("got rooms", rooms))
-//   .catch(err => console.error(err));
-
 router.delete("/api/users/:id/images/:photo_id", (req, res) => {
   console.log("$$$", req.params.id, req.params.photo_id);
   db.User.findOneAndUpdate(
@@ -149,6 +138,7 @@ router.post("/api/users", async (req, res) => {
       .catch(error => {
         res.status(error.status).json(error);
       });
+    console.log("chatkit token: ", token);
   } catch (err) {
     res.status(400).json(err);
   }

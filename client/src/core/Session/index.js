@@ -37,7 +37,7 @@ export default function reducer(state = initialState, action) {
     case SET_IN_EDIT:
       return {
         ...state,
-        inEdit: true
+        inEdit: !state.inEdit
       };
     case REMOVE_IN_EDIT:
       return {
