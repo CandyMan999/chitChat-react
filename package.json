@@ -23,7 +23,7 @@
   "dependencies": {
     "@pusher/chatkit-server": "^1.0.4",
     "axios": "^0.16.2",
-    "bcrypt": "^3.0.2",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.17.2",
     "cloudinary": "^1.11.0",
     "cors": "^2.8.4",
